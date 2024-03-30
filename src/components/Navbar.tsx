@@ -1,4 +1,8 @@
-export function NavBar() {
+import { useState } from "react";
+import { AddDreamForm } from "./AddDreamForm";
+
+export function MainMenu() {
+  const [activeTab, setActiveTab] = useState("new-dream");
   return (
     <>
       <ul className="nav nav-tabs nav-fill" id="myTab" role="tablist">
@@ -10,13 +14,12 @@ export function NavBar() {
             data-bs-target="#home-tab-pane"
             type="button"
             role="tab"
-            aria-controls="home-tab-pane"
             aria-selected="true"
             onClick={() => {
-              console.log("New Dream");
+              setActiveTab("new-dream");
             }}
           >
-            <i className="bi bi-pencil-fill"></i>
+            <i className="bi bi-pencil-fill"></i> New Dream
           </button>
         </li>
         <li className="nav-item" role="presentation">
@@ -27,32 +30,33 @@ export function NavBar() {
             data-bs-target="#profile-tab-pane"
             type="button"
             role="tab"
-            aria-controls="profile-tab-pane"
             aria-selected="false"
             onClick={() => {
-              console.log("My Dreams");
+              setActiveTab("my-dreams");
             }}
           >
-            <i className="bi bi-book-fill"></i>
+            <i className="bi bi-book-fill"></i> My Dreams
           </button>
         </li>
       </ul>
       <div className="tab-content" id="myTabContent">
         <div
-          className="tab-pane fade show active"
+          className={
+            "tab-pane fade" + (activeTab === "new-dream" ? " show active" : "")
+          }
           id="home-tab-pane"
           role="tabpanel"
-          aria-labelledby="home-tab"
-          tabIndex={0}
         >
-          ...
+          <div className="container">
+            <AddDreamForm />
+          </div>
         </div>
         <div
-          className="tab-pane fade"
+          className={
+            "tab-pane fade" + (activeTab === "my-dreams" ? " show active" : "")
+          }
           id="profile-tab-pane"
           role="tabpanel"
-          aria-labelledby="profile-tab"
-          tabIndex={0}
         >
           ...
         </div>
