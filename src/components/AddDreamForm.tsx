@@ -33,25 +33,31 @@ interface AddDreamFormProps {
 }
 
 export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [titleFieldValue, setTitleFieldValue] = useState("");
+  const [descriptionFieldValue, setDescriptionFieldValue] = useState("");
+  const [dateFieldValue, setDateFieldValue] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     console.log("Form submitted");
-    if (!description) {
+    if (!descriptionFieldValue) {
       alert("Please enter a description");
       return;
     }
 
-    if (!title) setTitle("Untitled");
-    const dream = { title, description, date } as Dream;
+    var resolvedTitle = titleFieldValue ? titleFieldValue : "Untitled";
+    const dream = {
+      title: resolvedTitle,
+      description: descriptionFieldValue,
+      date: dateFieldValue,
+    } as Dream;
     await addDream({ dream, callback: addDreamCallback });
     // Clear form
-    setTitle("");
-    setDescription("");
+    setTitleFieldValue("");
+    setDescriptionFieldValue("");
     setSubmitted(true);
   }
 
@@ -65,9 +71,9 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
           type="text"
           className="form-control"
           id="dreamTitle"
-          value={title}
+          value={titleFieldValue}
           placeholder="Untitled"
-          onChange={(event) => setTitle(event.target.value)}
+          onChange={(event) => setTitleFieldValue(event.target.value)}
         />
       </div>
       <div className="mb-3">
@@ -79,13 +85,13 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
           id="dreamDesc"
           minRows={5}
           onChange={(event) => {
-            setDescription(event.target.value);
+            setDescriptionFieldValue(event.target.value);
           }}
-          value={description}
+          value={descriptionFieldValue}
         ></TextareaAutosize>
       </div>
 
-      <DreamDatePicker date={date} setDate={setDate} />
+      <DreamDatePicker date={dateFieldValue} setDate={setDateFieldValue} />
 
       {submitted && (
         <div className="alert alert-success" role="alert">

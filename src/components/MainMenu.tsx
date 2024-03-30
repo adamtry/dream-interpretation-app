@@ -9,12 +9,17 @@ export function MainMenu() {
   const [dreams, setDreams] = useState<Dream[]>([]);
 
   function addDreamProp(dream: Dream) {
-    setDreams([...dreams, dream]);
+    var dr = [...dreams, dream];
+    dr.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    setDreams(dr);
   }
 
   useEffect(() => {
     const initialDreams = getAllDreams();
     initialDreams.then((dreams) => {
+      dreams.sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
       setDreams(dreams);
     });
   }, []);

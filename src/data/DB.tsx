@@ -50,9 +50,5 @@ export async function getAllDreams(): Promise<Dream[]> {
   const transaction = db.transaction("dreams");
   const objectStore = transaction.objectStore("dreams");
   const res = await objectStore.getAll();
-  // Reverse by date
-  res.sort((a, b) => {
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
   return res;
 }
