@@ -1,8 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllDreams } from "../data/DB";
+import { Dream } from "../types/Dream";
 import { AddDreamForm } from "./AddDreamForm";
+import { MyDreams } from "./MyDreams";
 
 export function MainMenu() {
   const [activeTab, setActiveTab] = useState("new-dream");
+  const [dreams, setDreams] = useState<Dream[]>([]);
+
+  function addDreamProp(dream: Dream) {
+    setDreams([...dreams, dream]);
+  }
+
+  useEffect(() => {
+    const initialDreams = getAllDreams();
+    initialDreams.then((dreams) => {
+      setDreams(dreams);
+    });
+  }, []);
+
   return (
     <>
       <ul className="nav nav-tabs nav-fill" id="myTab" role="tablist">
@@ -48,7 +64,7 @@ export function MainMenu() {
           role="tabpanel"
         >
           <div className="container">
-            <AddDreamForm />
+            <AddDreamForm addDreamCallback={addDreamProp} />
           </div>
         </div>
         <div
@@ -58,7 +74,9 @@ export function MainMenu() {
           id="profile-tab-pane"
           role="tabpanel"
         >
-          ...
+          <div className="container">
+            <MyDreams dreams={dreams} />
+          </div>
         </div>
       </div>
     </>

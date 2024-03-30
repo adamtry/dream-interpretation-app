@@ -1,4 +1,4 @@
-import { MainMenu } from "./components/Navbar";
+import { MainMenu } from "./components/MainMenu";
 
 function App() {
   return (

@@ -1,11 +1,12 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { addDream } from "./DB";
+import TextareaAutosize from "react-textarea-autosize";
+import { addDream } from "../data/DB";
+import { Dream } from "../types/Dream";
 
 interface DreamDatePickerProps {
   date: string;
   setDate: Dispatch<SetStateAction<string>>;
 }
-
 function DreamDatePicker({ date, setDate }: DreamDatePickerProps) {
   return (
     <>
@@ -27,7 +28,11 @@ function DreamDatePicker({ date, setDate }: DreamDatePickerProps) {
   );
 }
 
-export function AddDreamForm() {
+interface AddDreamFormProps {
+  addDreamCallback: (dream: Dream) => void;
+}
+
+export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
@@ -42,7 +47,8 @@ export function AddDreamForm() {
     }
 
     if (!title) setTitle("Untitled");
-    await addDream({ title, description, date });
+    const dream = { title, description, date } as Dream;
+    await addDream({ dream, callback: addDreamCallback });
     // Clear form
     setTitle("");
     setDescription("");
@@ -50,7 +56,7 @@ export function AddDreamForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} onChange={() => setSubmitted(false)}>
       <div className="mb-3" style={{ maxWidth: "30em" }}>
         <label htmlFor="dreamTitle" className="form-label">
           Title
@@ -68,13 +74,15 @@ export function AddDreamForm() {
         <label htmlFor="dreamDesc" className="form-label">
           Description
         </label>
-        <textarea
+        <TextareaAutosize
           className="form-control"
           id="dreamDesc"
-          rows={15}
-          onChange={(event) => setDescription(event.target.value)}
+          minRows={5}
+          onChange={(event) => {
+            setDescription(event.target.value);
+          }}
           value={description}
-        ></textarea>
+        ></TextareaAutosize>
       </div>
 
       <DreamDatePicker date={date} setDate={setDate} />
