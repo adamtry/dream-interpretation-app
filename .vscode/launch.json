@@ -6,10 +6,11 @@
   "configurations": [
     {
       "type": "chrome",
+      "runtimeExecutable": "/usr/bin/google-chrome",
       "request": "launch",
-      "name": "Launch Chrome against localhost",
+      "name": "Launch Chrome against localhost:3000",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}"
+      "sourceMaps": true
     }
   ]
 }
