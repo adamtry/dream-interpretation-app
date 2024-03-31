@@ -1,9 +1,9 @@
-import { NavBar } from "./components/Navbar";
+import { MainMenu } from "./components/MainMenu";
 
 function App() {
   return (
     <div className="container" style={{ marginTop: "20px" }}>
-      <NavBar />
+      <MainMenu />
     </div>
   );
 }

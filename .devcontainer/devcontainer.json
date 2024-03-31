@@ -11,7 +11,11 @@
   },
   "customizations": {
     "vscode": {
-      "extensions": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "rvest.vs-code-prettier-eslint"
+      ]
     }
   },
 
@@ -19,7 +23,9 @@
   // "features": {},
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3000]
+  "forwardPorts": [3000],
+
+  "initializeCommand": "npm install"
 
   // Use 'postCreateCommand' to run commands after the container is created.
   // "onCreateCommand": "sh post.sh"
