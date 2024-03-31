@@ -4,14 +4,49 @@ import { Dream } from "../types/Dream";
 import { AddDreamForm } from "./AddDreamForm";
 import { MyDreams } from "./MyDreams";
 
+enum AppView {
+  NewDream = "new-dream",
+  MyDreams = "my-dreams",
+}
+
+function NavItem({
+  icon,
+  onClick,
+  active,
+}: {
+  icon: string;
+  onClick: () => void;
+  active: boolean;
+}) {
+  if (!active) return <></>;
+  return (
+    <li className="nav-item">
+      <button
+        type="submit"
+        className="btn btn-primary btn-circle btn-xl"
+        style={{
+          fontSize: "2em",
+          borderRadius: "50%",
+          margin: "1em",
+          backgroundColor: "brown",
+        }}
+        onClick={onClick}
+      >
+        <i className={icon}></i>
+      </button>
+    </li>
+  );
+}
+
 export function MainMenu() {
-  const [activeTab, setActiveTab] = useState("new-dream");
+  const [appView, setAppView] = useState(AppView.NewDream);
   const [dreams, setDreams] = useState<Dream[]>([]);
 
   function addDreamProp(dream: Dream) {
     var dr = [...dreams, dream];
     dr.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     setDreams(dr);
+    setAppView(AppView.MyDreams);
   }
 
   useEffect(() => {
@@ -22,67 +57,40 @@ export function MainMenu() {
       });
       setDreams(dreams);
     });
-  }, []);
+  }, [dreams]);
+
+  var viewToRender = null;
+  switch (appView) {
+    case AppView.NewDream:
+      viewToRender = <AddDreamForm addDreamCallback={addDreamProp} />;
+      break;
+    case AppView.MyDreams:
+      viewToRender = <MyDreams dreams={dreams} />;
+      break;
+    default:
+      viewToRender = <AddDreamForm addDreamCallback={addDreamProp} />;
+      break;
+  }
 
   return (
     <>
-      <ul className="nav nav-tabs nav-fill" id="myTab" role="tablist">
-        <li className="nav-item" role="presentation">
-          <button
-            className="nav-link active"
-            id="home-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#home-tab-pane"
-            type="button"
-            role="tab"
-            aria-selected="true"
-            onClick={() => {
-              setActiveTab("new-dream");
-            }}
-          >
-            <i className="bi bi-pencil-fill"></i> New Dream
-          </button>
-        </li>
-        <li className="nav-item" role="presentation">
-          <button
-            className="nav-link"
-            id="profile-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#profile-tab-pane"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            onClick={() => {
-              setActiveTab("my-dreams");
-            }}
-          >
-            <i className="bi bi-book-fill"></i> My Dreams
-          </button>
-        </li>
-      </ul>
-      <div className="tab-content" id="myTabContent">
-        <div
-          className={
-            "tab-pane fade" + (activeTab === "new-dream" ? " show active" : "")
-          }
-          id="home-tab-pane"
-          role="tabpanel"
-        >
-          <div className="container">
-            <AddDreamForm addDreamCallback={addDreamProp} />
-          </div>
-        </div>
-        <div
-          className={
-            "tab-pane fade" + (activeTab === "my-dreams" ? " show active" : "")
-          }
-          id="profile-tab-pane"
-          role="tabpanel"
-        >
-          <div className="container">
-            <MyDreams dreams={dreams} />
-          </div>
-        </div>
+      <div className="container" style={{ marginBottom: "10em" }}>
+        {viewToRender}
+      </div>
+      <div className="navbar fixed-bottom d-flex justify-content-end">
+        <ul className="nav">
+          <NavItem
+            icon="bi bi-plus-circle"
+            onClick={() => setAppView(AppView.NewDream)}
+            active={appView !== AppView.NewDream}
+          />
+
+          <NavItem
+            icon="bi bi-journal-text"
+            onClick={() => setAppView(AppView.MyDreams)}
+            active={appView !== AppView.MyDreams}
+          />
+        </ul>
       </div>
     </>
   );

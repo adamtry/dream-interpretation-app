@@ -1,54 +1,65 @@
-import { DBSchema, openDB } from "idb";
 import { Dream } from "../types/Dream";
 
-interface DreamDB extends DBSchema {
-  dreams: {
-    value: {
-      title: string;
-      description: string;
-      date: string;
-    };
-    key: number;
-    indexes: { "by-date": string };
-    autoIncrement: true;
+import { FirebaseApp, initializeApp } from "firebase/app";
+import {
+  Firestore,
+  addDoc,
+  collection,
+  getDocs,
+  initializeFirestore,
+} from "firebase/firestore";
+
+function fetchFirebaseApp(): FirebaseApp {
+  const firebaseConfig = {
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
   };
+  const app = initializeApp(firebaseConfig);
+  return app;
 }
 
-export async function createIndexedDb() {
-  const db = await openDB<DreamDB>("index-db", 1, {
-    upgrade(db) {
-      const dreamStore = db.createObjectStore("dreams", {
-        autoIncrement: true,
-      });
-      dreamStore.createIndex("by-date", "dreams");
-    },
-  });
-  return db;
+function fetchFirestore(): Firestore {
+  const APP = fetchFirebaseApp();
+  const firestoreSettings = {
+    ignoreUndefinedProperties: true,
+    timestampsInSnapshots: true,
+  };
+  const firestore = initializeFirestore(APP, firestoreSettings);
+  return firestore;
 }
 
-interface AddDreamProps {
-  dream: Dream;
-  callback: (dream: Dream) => void;
-}
+const FIRESTORE = fetchFirestore();
 
-export async function addDream({ dream, callback }: AddDreamProps) {
-  const { title, description, date } = dream;
-  const db = await openDB<DreamDB>("index-db", 1);
-  await db
-    .put("dreams", {
-      title,
-      description,
-      date,
-    })
+async function addDream(dream: Dream, callback: (dream: Dream) => void) {
+  const res = await addDoc(collection(FIRESTORE, "dreams"), dream)
     .then(() => {
       callback(dream);
+      console.log("Document written with ID: ", res);
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
     });
 }
 
-export async function getAllDreams(): Promise<Dream[]> {
-  const db = await openDB<DreamDB>("index-db", 1);
-  const transaction = db.transaction("dreams");
-  const objectStore = transaction.objectStore("dreams");
-  const res = await objectStore.getAll();
-  return res;
+async function getAllDreams(userId?: string): Promise<Dream[]> {
+  const dreamList: Dream[] = [];
+  const querySnapshot = await getDocs(collection(FIRESTORE, "dreams"));
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    const dream = {
+      id: doc.id,
+      title: data.title,
+      description: data.description,
+      date: data.date,
+    } as Dream;
+    dreamList.push(dream);
+  });
+  return dreamList;
 }
+
+export { addDream, getAllDreams };

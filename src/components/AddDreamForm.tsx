@@ -54,7 +54,7 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
       description: descriptionFieldValue,
       date: dateFieldValue,
     } as Dream;
-    await addDream({ dream, callback: addDreamCallback });
+    await addDream(dream, addDreamCallback);
     // Clear form
     setTitleFieldValue("");
     setDescriptionFieldValue("");
@@ -99,15 +99,13 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
         </div>
       )}
 
-      {/* Center button horizontally */}
       <div className="d-flex justify-content-center">
-        {/* Circular button with plus icon */}
         <button
           type="submit"
           className="btn btn-primary btn-circle btn-xl"
           style={{ fontSize: "2em", borderRadius: "50%", marginTop: "1em" }}
         >
-          <i className="bi bi-plus-circle"></i>
+          <i className="bi bi-floppy-fill"></i>
         </button>
       </div>
     </form>

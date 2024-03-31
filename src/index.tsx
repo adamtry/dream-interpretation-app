@@ -2,7 +2,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { createIndexedDb } from "./data/DB";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import "./styles/index.css";
@@ -15,10 +14,6 @@ root.render(
     <App />
   </React.StrictMode>,
 );
-
-window.addEventListener("DOMContentLoaded", async () => {
-  await createIndexedDb();
-});
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

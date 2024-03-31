@@ -23,7 +23,7 @@ export function MyDreams({ dreams }: MyDreamsProps) {
   return (
     <>
       {dreams.map((dream) => (
-        <DreamCard {...dream} />
+        <DreamCard {...dream} key={dream.id} />
       ))}
     </>
   );
