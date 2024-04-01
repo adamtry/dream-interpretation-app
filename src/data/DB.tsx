@@ -33,11 +33,9 @@ function fetchFirestore(): Firestore {
   return firestore;
 }
 
-const FIRESTORE = fetchFirestore();
-
 async function addDream(dream: Dream, callback: (dream: Dream) => void) {
-  const res = await addDoc(collection(FIRESTORE, "dreams"), dream)
-    .then(() => {
+  await addDoc(collection(fetchFirestore(), "dreams"), dream)
+    .then((res) => {
       callback(dream);
       console.log("Document written with ID: ", res);
     })
@@ -48,7 +46,7 @@ async function addDream(dream: Dream, callback: (dream: Dream) => void) {
 
 async function getAllDreams(userId?: string): Promise<Dream[]> {
   const dreamList: Dream[] = [];
-  const querySnapshot = await getDocs(collection(FIRESTORE, "dreams"));
+  const querySnapshot = await getDocs(collection(fetchFirestore(), "dreams"));
   querySnapshot.forEach((doc) => {
     const data = doc.data();
     const dream = {

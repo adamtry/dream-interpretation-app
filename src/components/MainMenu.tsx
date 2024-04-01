@@ -51,11 +51,21 @@ export function MainMenu() {
 
   useEffect(() => {
     const initialDreams = getAllDreams();
-    initialDreams.then((dreams) => {
-      dreams.sort((a, b) => {
+    initialDreams.then((incomingDreams) => {
+      var currentDreamIds = dreams.map((dream) => dream.id);
+      var incomingDreamIds = incomingDreams.map((dream) => dream.id);
+      var allSet =
+        currentDreamIds.length === incomingDreamIds.length &&
+        currentDreamIds.sort().join(",") === incomingDreamIds.sort().join(",");
+      if (allSet) {
+        console.log("No new dreams");
+        return;
+      }
+
+      incomingDreams.sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
-      setDreams(dreams);
+      setDreams(incomingDreams);
     });
   }, [dreams]);
 

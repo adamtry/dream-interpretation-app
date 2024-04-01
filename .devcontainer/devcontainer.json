@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-  "name": "Node.js & TypeScript",
+  "name": "Dreamflow",
   // "dockerFile": "Dockerfile",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
   "features": {
@@ -17,11 +17,13 @@
     }
   },
 
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
+
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3000, 4400, 5000],
+  "forwardPorts": [3000],
 
   "initializeCommand": "npm install"
 
