@@ -2,8 +2,8 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
   "name": "Dreamflow",
-  // "dockerFile": "Dockerfile",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+  "dockerFile": "Dockerfile",
+  // "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
   "features": {
     "ghcr.io/devcontainers-contrib/features/firebase-cli:2": {}
   },
@@ -13,7 +13,9 @@
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
         "rvest.vs-code-prettier-eslint",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "ms-azuretools.vscode-docker",
+        "Ionic.ionic"
       ]
     }
   },
@@ -24,9 +26,9 @@
   // "features": {},
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3000],
+  "forwardPorts": [3000]
 
-  "initializeCommand": "npm install"
+  // "initializeCommand": "npm install"
 
   // Use 'postCreateCommand' to run commands after the container is created.
   // "onCreateCommand": "sh post.sh"
