@@ -103,6 +103,7 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
         <button
           type="submit"
           className="btn btn-primary btn-circle btn-xl"
+          aria-label="Save dream"
           style={{ fontSize: "2em", borderRadius: "50%", marginTop: "1em" }}
         >
           <i className="bi bi-floppy-fill"></i>

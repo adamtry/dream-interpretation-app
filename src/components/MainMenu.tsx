@@ -9,21 +9,14 @@ enum AppView {
   MyDreams = "my-dreams",
 }
 
-function NavItem({
-  icon,
-  onClick,
-  active,
-}: {
-  icon: string;
-  onClick: () => void;
-  active: boolean;
-}) {
+function NavItem(icon: string, ariaLabel: string, onClick: () => void, active: boolean) {
   if (!active) return <></>;
   return (
     <li className="nav-item">
       <button
         type="submit"
         className="btn btn-primary btn-circle btn-xl"
+        aria-label={ariaLabel}
         style={{
           fontSize: "2em",
           borderRadius: "50%",
@@ -38,7 +31,7 @@ function NavItem({
   );
 }
 
-export function MainMenu() {
+function MainMenu() {
   const [appView, setAppView] = useState(AppView.NewDream);
   const [dreams, setDreams] = useState<Dream[]>([]);
 
@@ -91,12 +84,14 @@ export function MainMenu() {
         <ul className="nav">
           <NavItem
             icon="bi bi-plus-circle"
+            ariaLabel="Add dream"
             onClick={() => setAppView(AppView.NewDream)}
             active={appView !== AppView.NewDream}
           />
 
           <NavItem
             icon="bi bi-journal-text"
+            ariaLabel="My dreams"
             onClick={() => setAppView(AppView.MyDreams)}
             active={appView !== AppView.MyDreams}
           />
@@ -105,3 +100,5 @@ export function MainMenu() {
     </>
   );
 }
+
+export { MainMenu };
