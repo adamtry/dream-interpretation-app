@@ -9,7 +9,13 @@ enum AppView {
   MyDreams = "my-dreams",
 }
 
-function NavItem(icon: string, ariaLabel: string, onClick: () => void, active: boolean) {
+interface NavItemProps {
+  icon: string;
+  ariaLabel: string;
+  onClick: () => void;
+  active: boolean;
+}
+function NavItem({ icon, ariaLabel, onClick, active }: NavItemProps) {
   if (!active) return <></>;
   return (
     <li className="nav-item">
