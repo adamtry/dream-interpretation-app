@@ -9,12 +9,6 @@
       "purpose": "maskable"
     },
     {
-      "src": "icon.svg",
-      "type": "image/svg+xml",
-      "sizes": "128x128 256x256 512x512",
-      "purpose": "any"
-    },
-    {
       "src": "icon512.png",
       "type": "image/png",
       "sizes": "512x512",
