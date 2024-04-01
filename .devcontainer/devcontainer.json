@@ -1,11 +1,9 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-  "name": "Node.js & TypeScript",
-  // use dockerfile
+  "name": "Dreamflow",
   // "dockerFile": "Dockerfile",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
   "features": {
     "ghcr.io/devcontainers-contrib/features/firebase-cli:2": {}
   },
@@ -18,6 +16,8 @@
       ]
     }
   },
+
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
 
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
