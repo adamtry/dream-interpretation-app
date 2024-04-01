@@ -1,0 +1,7 @@
+{
+  "name": "dream-interpreter",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
