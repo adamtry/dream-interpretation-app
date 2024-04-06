@@ -4,7 +4,6 @@
 
 # builds
 build/
-android/
 
 # dependencies
 /node_modules
