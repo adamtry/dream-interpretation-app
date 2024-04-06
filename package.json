@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
+    "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "serve": "serve -s build",
     "lint": "eslint src --fix",
@@ -70,6 +70,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@ionic/cli": "^7.2.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.57.0",

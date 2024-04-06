@@ -1,5 +1,5 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { CACHE_SIZE_UNLIMITED, Firestore, initializeFirestore } from "firebase/firestore";
+import { Firestore, getFirestore } from "firebase/firestore";
 
 function fetchFirebaseApp(): FirebaseApp {
   const firebaseOptions = {
@@ -11,15 +11,11 @@ function fetchFirebaseApp(): FirebaseApp {
     appId: process.env.REACT_APP_FIREBASE_APP_ID,
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
   };
-  const app = initializeApp(firebaseOptions);
-  return app;
+  return initializeApp(firebaseOptions);
 }
 
 export function fetchFirestore(): Firestore {
   const APP = fetchFirebaseApp();
-  const firestoreSettings = {
-    cacheSizeBytes: CACHE_SIZE_UNLIMITED,
-  };
-  const firestore = initializeFirestore(APP, firestoreSettings);
+  const firestore = getFirestore(APP);
   return firestore;
 }

@@ -74,7 +74,7 @@ function MainMenu() {
       viewToRender = <AddDreamForm addDreamCallback={addDreamProp} />;
       break;
     case AppView.MyDreams:
-      viewToRender = <MyDreams dreams={dreams} />;
+      viewToRender = <MyDreams allDreams={dreams} />;
       break;
     default:
       viewToRender = <AddDreamForm addDreamCallback={addDreamProp} />;
