@@ -35,10 +35,7 @@ interface AddDreamFormProps {
 export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
   const [titleFieldValue, setTitleFieldValue] = useState("");
   const [descriptionFieldValue, setDescriptionFieldValue] = useState("");
-  const [dateFieldValue, setDateFieldValue] = useState(
-    new Date().toISOString().split("T")[0],
-  );
-  const [submitted, setSubmitted] = useState(false);
+  const [dateFieldValue, setDateFieldValue] = useState(new Date().toISOString().split("T")[0]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -58,57 +55,53 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
     // Clear form
     setTitleFieldValue("");
     setDescriptionFieldValue("");
-    setSubmitted(true);
   }
 
   return (
-    <form onSubmit={handleSubmit} onChange={() => setSubmitted(false)}>
-      <div className="mb-3" style={{ maxWidth: "30em" }}>
-        <label htmlFor="dreamTitle" className="form-label">
-          Title
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="dreamTitle"
-          value={titleFieldValue}
-          placeholder="Untitled"
-          onChange={(event) => setTitleFieldValue(event.target.value)}
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="dreamDesc" className="form-label">
-          Description
-        </label>
-        <TextareaAutosize
-          className="form-control"
-          id="dreamDesc"
-          minRows={5}
-          onChange={(event) => {
-            setDescriptionFieldValue(event.target.value);
-          }}
-          value={descriptionFieldValue}
-        ></TextareaAutosize>
-      </div>
-
-      <DreamDatePicker date={dateFieldValue} setDate={setDateFieldValue} />
-
-      {submitted && (
-        <div className="alert alert-success" role="alert">
-          Dream submitted successfully!
+    <>
+      <h1>Add Dream</h1>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3" style={{ maxWidth: "30em" }}>
+          <label htmlFor="dreamTitle" className="form-label">
+            Title
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="dreamTitle"
+            value={titleFieldValue}
+            placeholder="Untitled"
+            onChange={(event) => setTitleFieldValue(event.target.value)}
+          />
         </div>
-      )}
+        <div className="mb-3">
+          <label htmlFor="dreamDesc" className="form-label">
+            Description
+          </label>
+          <TextareaAutosize
+            className="form-control"
+            id="dreamDesc"
+            minRows={5}
+            onChange={(event) => {
+              setDescriptionFieldValue(event.target.value);
+            }}
+            value={descriptionFieldValue}
+          ></TextareaAutosize>
+        </div>
 
-      <div className="d-flex justify-content-center">
-        <button
-          type="submit"
-          className="btn btn-primary btn-circle btn-xl"
-          aria-label="Save dream"
-          style={{ fontSize: "2em", borderRadius: "50%", marginTop: "1em" }}
-        >
-          <i className="bi bi-floppy-fill"></i>
-        </button>
-      </div>
-    </form>
+        <DreamDatePicker date={dateFieldValue} setDate={setDateFieldValue} />
+
+        <div className="d-flex justify-content-center">
+          <button
+            type="submit"
+            className="btn btn-primary btn-circle btn-xl"
+            aria-label="Save dream"
+            style={{ fontSize: "2em", borderRadius: "50%", marginTop: "1em" }}
+          >
+            <i className="bi bi-floppy-fill"></i>
+          </button>
+        </div>
+      </form>
+    </>
   );
 }

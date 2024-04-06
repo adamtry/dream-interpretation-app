@@ -1,23 +1,12 @@
 import { Dream } from "../types/Dream";
 
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import "firebase/firestore";
+import { QuerySnapshot, addDoc, collection, getDocs } from "firebase/firestore";
 import { fetchFirestore } from "./Firestore";
 
-async function addDream(dream: Dream, callback: (dream: Dream) => void) {
-  await addDoc(collection(fetchFirestore(), "dreams"), dream)
-    .then((res) => {
-      callback(dream);
-      console.log("Document written with ID: ", res);
-    })
-    .catch((error) => {
-      console.error("Error adding document: ", error);
-    });
-}
-
-async function getAllDreams(userId?: string): Promise<Dream[]> {
+function snapshotToDreams(snapshot: QuerySnapshot): Dream[] {
   const dreamList: Dream[] = [];
-  const querySnapshot = await getDocs(collection(fetchFirestore(), "dreams"));
-  querySnapshot.forEach((doc) => {
+  snapshot.forEach((doc: any) => {
     const data = doc.data();
     const dream = {
       id: doc.id,
@@ -28,6 +17,18 @@ async function getAllDreams(userId?: string): Promise<Dream[]> {
     dreamList.push(dream);
   });
   return dreamList;
+}
+
+async function addDream(dream: Dream, callback: (dream: Dream) => void) {
+  const firestore = fetchFirestore();
+  await addDoc(collection(firestore, "dreams"), dream).then(() => {
+    callback(dream);
+  });
+}
+
+async function getAllDreams(userId?: string): Promise<Dream[]> {
+  const querySnapshot = await getDocs(collection(fetchFirestore(), "dreams"));
+  return snapshotToDreams(querySnapshot);
 }
 
 export { addDream, getAllDreams };
