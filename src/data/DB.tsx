@@ -1,7 +1,7 @@
 import { Dream } from "../types/Dream";
 
 import "firebase/firestore";
-import { QuerySnapshot, addDoc, collection, getDocs } from "firebase/firestore";
+import { QuerySnapshot, collection, getDocs } from "firebase/firestore";
 import { fetchFirestore } from "./Firestore";
 
 function snapshotToDreams(snapshot: QuerySnapshot): Dream[] {
@@ -21,9 +21,13 @@ function snapshotToDreams(snapshot: QuerySnapshot): Dream[] {
 
 async function addDream(dream: Dream, callback: (dream: Dream) => void) {
   const firestore = fetchFirestore();
-  await addDoc(collection(firestore, "dreams"), dream).then(() => {
-    callback(dream);
-  });
+  console.log(
+    `Adding dream: ${dream.title} ${dream.description} ${dream.date} to Firestore ${firestore.app.options.projectId}`,
+  );
+  callback(dream);
+  // await addDoc(collection(firestore, "dreams"), dream).then(() => {
+  //   callback(dream);
+  // });
 }
 
 async function getAllDreams(userId?: string): Promise<Dream[]> {
