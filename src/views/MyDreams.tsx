@@ -1,38 +1,45 @@
-import { IonPage } from "@ionic/react";
+import {
+  IonCol,
+  IonContent,
+  IonDatetime,
+  IonDatetimeButton,
+  IonGrid,
+  IonHeader,
+  IonModal,
+  IonRow,
+  IonSearchbar,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 import { useEffect, useState } from "react";
 import { Dream } from "../types/Dream";
 
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonItem, IonPage } from "@ionic/react";
+
 function DreamCard(dream: Dream) {
   return (
-    <div className="card mb-3">
-      <div className="card-header">
-        <span className="fw-bold">{dream.date}</span>
-      </div>
-      <div className="card-body">
-        <u>
-          <h5 className="card-title">{dream.title}</h5>
-        </u>
-        <p className="card-text">{dream.description}</p>
-      </div>
-    </div>
+    <IonCard key={dream.id}>
+      <IonCardHeader>
+        <IonCardSubtitle>{dream.date}</IonCardSubtitle>
+      </IonCardHeader>
+      <IonCardContent>
+        <IonCardTitle>{dream.title}</IonCardTitle>
+        <p>{dream.description}</p>
+      </IonCardContent>
+    </IonCard>
   );
 }
 
 function SearchBar({ setSearchFilter }: { setSearchFilter: (searchFilter: string) => void }) {
   return (
-    <div className="input-group mb-3">
-      <input
+    <IonItem>
+      <IonSearchbar
         id="dreamSearch"
         type="text"
-        className="form-control"
         placeholder="Search dreams"
-        aria-label="Search dreams"
-        aria-describedby="button-addon2"
-        onChange={() =>
-          setSearchFilter((document.getElementById("dreamSearch") as HTMLInputElement).value.toLowerCase())
-        }
-      />
-    </div>
+        onIonChange={(event) => setSearchFilter(event.detail.value!.toLowerCase())}
+      ></IonSearchbar>
+    </IonItem>
   );
 }
 
@@ -48,37 +55,29 @@ function DateRange({
   dateFilter: DateRangeFilter;
   setDateFilter: (dateFilter: DateRangeFilter) => void;
 }) {
+  var oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const oneWeekAgoString = oneWeekAgo.toISOString();
+
   return (
-    <div className="input-group mb-3">
-      <input
-        id="searchStartDate"
-        type="date"
-        className="form-control"
-        placeholder="Start date"
-        aria-label="Start date"
-        aria-describedby="button-addon2"
-        onChange={() =>
-          setDateFilter({
-            ...dateFilter,
-            startDate: (document.getElementById("searchStartDate") as HTMLInputElement).value,
-          })
-        }
-      />
-      <input
-        id="searchEndDate"
-        type="date"
-        className="form-control"
-        placeholder="End date"
-        aria-label="End date"
-        aria-describedby="button-addon2"
-        onChange={() =>
-          setDateFilter({
-            ...dateFilter,
-            endDate: (document.getElementById("searchEndDate") as HTMLInputElement).value,
-          })
-        }
-      />
-    </div>
+    <IonItem>
+      <IonGrid>
+        <IonRow>
+          <IonCol size={"6"}>
+            <IonDatetimeButton aria-label="Date" datetime="startDate"></IonDatetimeButton>
+            <IonModal keepContentsMounted={true}>
+              <IonDatetime id="startDate" presentation="date" value={oneWeekAgoString}></IonDatetime>
+            </IonModal>
+          </IonCol>
+          <IonCol size={"6"}>
+            <IonDatetimeButton aria-label="Date" datetime="endDate"></IonDatetimeButton>
+            <IonModal keepContentsMounted={true}>
+              <IonDatetime id="endDate" presentation="date"></IonDatetime>
+            </IonModal>
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+    </IonItem>
   );
 }
 
@@ -113,10 +112,16 @@ export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
 
   return (
     <IonPage>
-      <h1>My Dreams</h1>
-      <DateRange dateFilter={dateFilter} setDateFilter={setDateFilter} />
-      <SearchBar setSearchFilter={setTextFilter} />
-      {allDreams?.map((dream) => <DreamCard {...dream} key={dream.id} />)}
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>My Dreams</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <DateRange dateFilter={dateFilter} setDateFilter={setDateFilter} />
+        <SearchBar setSearchFilter={setTextFilter} />
+        {shownDreams?.map((dream) => <DreamCard {...dream} key={dream.id} />)}
+      </IonContent>
     </IonPage>
   );
 }

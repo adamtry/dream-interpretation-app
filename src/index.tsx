@@ -19,6 +19,8 @@ import "@ionic/react/css/float-elements.css";
 import "@ionic/react/css/padding.css";
 import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
+import { add, list } from "ionicons/icons";
+
 import React from "react";
 import { BrowserRouter, RouteComponentProps } from "react-router-dom";
 import { App } from "./App";
@@ -38,11 +40,11 @@ function Root(props: RouteComponentProps<{}>) {
           <IonFooter>
             <IonTabBar slot={"bottom"}>
               <IonTabButton tab="add-dream" href="/add-dream">
-                <IonIcon name="add-circle" />
+                <IonIcon icon={add} />
                 Add Dream
               </IonTabButton>
               <IonTabButton tab="my-dreams" href="/my-dreams">
-                <IonIcon name="list" />
+                <IonIcon icon={list} />
                 My Dreams
               </IonTabButton>
             </IonTabBar>

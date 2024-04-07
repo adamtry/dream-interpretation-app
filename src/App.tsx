@@ -1,7 +1,7 @@
 import { IonContent } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { useEffect, useState } from "react";
-import { Route, RouteComponentProps } from "react-router-dom";
+import { Redirect, Route, RouteComponentProps } from "react-router-dom";
 import { getAllDreams } from "./data/DB";
 import { Dream } from "./types/Dream";
 import { AddDreamForm } from "./views/AddDreamForm";
@@ -48,7 +48,7 @@ function App({ history }: AppProps) {
           component={(props: any) => <AddDreamForm {...props} addDreamCallback={addDreamProp} />}
         />
         <Route path="/my-dreams" exact={true} component={(props: any) => <MyDreams {...props} allDreams={dreams} />} />
-        {/* <Route path="/" render={() => <Redirect to="/add-dream" />} exact={true} /> */}
+        <Route path="/" render={() => <Redirect to="/add-dream" />} exact={true} />
       </IonReactRouter>
     </IonContent>
   );
