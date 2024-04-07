@@ -1,3 +1,4 @@
+import { IonPage } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { Dream } from "../types/Dream";
 
@@ -111,13 +112,11 @@ export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
   }, [textFilter, allDreams, dateFilter.startDate, dateFilter.endDate]);
 
   return (
-    <>
+    <IonPage>
       <h1>My Dreams</h1>
       <DateRange dateFilter={dateFilter} setDateFilter={setDateFilter} />
       <SearchBar setSearchFilter={setTextFilter} />
-      {shownDreams.map((dream) => (
-        <DreamCard {...dream} key={dream.id} />
-      ))}
-    </>
+      {allDreams?.map((dream) => <DreamCard {...dream} key={dream.id} />)}
+    </IonPage>
   );
 }
