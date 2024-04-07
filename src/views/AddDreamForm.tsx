@@ -66,7 +66,7 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
           </IonItem>
 
           <IonItem>
-            <IonTextarea {...register("description")} rows={10} label="Description" />
+            <IonTextarea {...register("description")} rows={10} aria-label="Description" placeholder="Description..." />
             {errors.description && <p className="error-message">Description is required.</p>}
           </IonItem>
 
