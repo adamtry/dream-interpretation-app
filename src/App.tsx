@@ -10,20 +10,6 @@ import { MyDreams } from "./views/MyDreams";
 
 interface AppProps extends RouteComponentProps {}
 
-function getAllTestDreams(): Promise<Dream[]> {
-  const testDreams: Dream[] = [];
-
-  for (let i = 0; i < 30; i++) {
-    testDreams.push({
-      id: i.toString(),
-      title: `Dream ${i}`,
-      description: `Description ${i}`,
-      date: new Date().toDateString(),
-    });
-  }
-  return Promise.resolve(testDreams);
-}
-
 function App({ history }: AppProps) {
   const [dreams, setDreams] = useState<Dream[]>([]);
 
