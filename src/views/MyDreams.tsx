@@ -86,13 +86,22 @@ function DateRange({
   );
 }
 
-function DreamList({ allDreams }: { allDreams: Dream[] }) {
+function DreamList({
+  allDreams,
+  handleRefresh,
+}: {
+  allDreams: Dream[];
+  handleRefresh: (event: IonRefresherCustomEvent<RefresherEventDetail>) => void;
+}) {
   const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
   useEffect(() => {
     setShownDreams(allDreams);
   }, [allDreams]);
   return (
     <IonContent>
+      <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+        <IonRefresherContent></IonRefresherContent>
+      </IonRefresher>
       {shownDreams.map((dream) => (
         <DreamCard {...dream} key={dream.id} />
       ))}
@@ -150,12 +159,9 @@ export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
           <IonTitle>My Dreams</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-        <IonRefresherContent></IonRefresherContent>
-      </IonRefresher>
       <DateRange dateFilter={dateFilter} setDateFilter={setDateFilter} />
       <SearchBar setSearchFilter={setTextFilter} />
-      <DreamList allDreams={shownDreams} />
+      <DreamList allDreams={shownDreams} handleRefresh={handleRefresh} />
     </IonPage>
   );
 }
