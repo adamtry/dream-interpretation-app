@@ -12,17 +12,15 @@ import "@ionic/react/css/structure.css";
 import "@ionic/react/css/typography.css";
 
 /* Optional CSS utils that can be commented out */
-import { IonApp, IonContent, IonFooter, IonIcon, IonPage, IonTabBar, IonTabButton } from "@ionic/react";
 import "@ionic/react/css/display.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/float-elements.css";
 import "@ionic/react/css/padding.css";
 import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
-import { add, list } from "ionicons/icons";
 
 import React from "react";
-import { BrowserRouter, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { App } from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
@@ -30,27 +28,7 @@ const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 function Root(props: RouteComponentProps<{}>) {
   return (
     <React.StrictMode>
-      <IonApp>
-        <IonPage>
-          <IonContent className="ion-padding">
-            <BrowserRouter>
-              <App {...props} />
-            </BrowserRouter>
-          </IonContent>
-          <IonFooter>
-            <IonTabBar slot={"bottom"}>
-              <IonTabButton tab="add-dream" href="/add-dream">
-                <IonIcon icon={add} />
-                Add Dream
-              </IonTabButton>
-              <IonTabButton tab="my-dreams" href="/my-dreams">
-                <IonIcon icon={list} />
-                My Dreams
-              </IonTabButton>
-            </IonTabBar>
-          </IonFooter>
-        </IonPage>
-      </IonApp>
+      <App {...props} />
     </React.StrictMode>
   );
 }

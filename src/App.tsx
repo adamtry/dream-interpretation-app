@@ -1,5 +1,6 @@
-import { IonContent } from "@ionic/react";
+import { IonApp, IonContent, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
+import { add, list } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { Redirect, Route, RouteComponentProps } from "react-router-dom";
 import { getAllDreams } from "./data/DB";
@@ -8,6 +9,20 @@ import { AddDreamForm } from "./views/AddDreamForm";
 import { MyDreams } from "./views/MyDreams";
 
 interface AppProps extends RouteComponentProps {}
+
+function getAllTestDreams(): Promise<Dream[]> {
+  const testDreams: Dream[] = [];
+
+  for (let i = 0; i < 30; i++) {
+    testDreams.push({
+      id: i.toString(),
+      title: `Dream ${i}`,
+      description: `Description ${i}`,
+      date: new Date().toDateString(),
+    });
+  }
+  return Promise.resolve(testDreams);
+}
 
 function App({ history }: AppProps) {
   const [dreams, setDreams] = useState<Dream[]>([]);
@@ -40,17 +55,27 @@ function App({ history }: AppProps) {
   }, [dreams]);
 
   return (
-    <IonContent>
+    <IonApp>
       <IonReactRouter>
-        <Route
-          path="/add-dream"
-          exact={true}
-          component={(props: any) => <AddDreamForm {...props} addDreamCallback={addDreamProp} />}
-        />
-        <Route path="/my-dreams" exact={true} component={(props: any) => <MyDreams {...props} allDreams={dreams} />} />
-        <Route path="/" render={() => <Redirect to="/add-dream" />} exact={true} />
+        <IonContent>
+          <IonRouterOutlet>
+            <Route path="/add-dream" render={() => <AddDreamForm addDreamCallback={addDreamProp} />} />
+            <Route path="/my-dreams" render={() => <MyDreams allDreams={dreams} />} />
+            <Route path="/" exact render={() => <Redirect to="/add-dream" />} />
+          </IonRouterOutlet>
+        </IonContent>
+        <IonTabBar slot={"bottom"}>
+          <IonTabButton tab="add-dream" href="/add-dream">
+            <IonIcon icon={add} />
+            Add Dream
+          </IonTabButton>
+          <IonTabButton tab="my-dreams" href="/my-dreams">
+            <IonIcon icon={list} />
+            My Dreams
+          </IonTabButton>
+        </IonTabBar>
       </IonReactRouter>
-    </IonContent>
+    </IonApp>
   );
 }
 
