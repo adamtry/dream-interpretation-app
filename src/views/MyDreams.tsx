@@ -2,8 +2,6 @@ import { IonRefresherCustomEvent } from "@ionic/core";
 import {
   IonContent,
   IonHeader,
-  IonInput,
-  IonItemGroup,
   IonRefresher,
   IonRefresherContent,
   IonSearchbar,
@@ -42,50 +40,6 @@ function SearchBar({ setSearchFilter }: { setSearchFilter: (searchFilter: string
   );
 }
 
-type DateRangeFilter = {
-  startDate: string | null;
-  endDate: string | null;
-};
-
-function DateRange({
-  dateFilter,
-  setDateFilter,
-}: {
-  dateFilter: DateRangeFilter;
-  setDateFilter: (dateFilter: DateRangeFilter) => void;
-}) {
-  const [startDate, setStartDate] = useState<string | null>(null);
-  const [endDate, setEndDate] = useState<string | null>(null);
-  return (
-    <>
-      <IonItemGroup>
-        <IonItem>
-          <IonInput
-            type="date"
-            label="Start date"
-            value={startDate}
-            onIonChange={(e) => {
-              setStartDate(e.detail.value as string);
-              setDateFilter({ ...dateFilter, startDate: e.detail.value as string });
-            }}
-          />
-        </IonItem>
-        <IonItem>
-          <IonInput
-            type="date"
-            label="End date"
-            value={endDate}
-            onIonChange={(e) => {
-              setEndDate(e.detail.value as string);
-              setDateFilter({ ...dateFilter, endDate: e.detail.value as string });
-            }}
-          />
-        </IonItem>
-      </IonItemGroup>
-    </>
-  );
-}
-
 function DreamList({
   allDreams,
   handleRefresh,
@@ -112,21 +66,11 @@ function DreamList({
 export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
   const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
   const [textFilter, setTextFilter] = useState<string>("");
-  const [dateFilter, setDateFilter] = useState<DateRangeFilter>({ startDate: null, endDate: null });
 
   const filterDreamsToShow = useCallback(() => {
     console.log("Filtering dreams");
 
     var filteredDreams = allDreams;
-
-    // Filter by date
-    const [startDate, endDate] = [dateFilter.startDate, dateFilter.endDate];
-    if (startDate != null) {
-      filteredDreams = filteredDreams.filter((dream) => dream.date >= startDate);
-    }
-    if (endDate != null) {
-      filteredDreams = filteredDreams.filter((dream) => dream.date <= endDate);
-    }
 
     // Filter by text
     if (textFilter) {
@@ -138,7 +82,7 @@ export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
       filteredDreams = allDreams.filter((dream) => match(dream, textFilter));
     }
     setShownDreams(filteredDreams);
-  }, [allDreams, dateFilter, textFilter]);
+  }, [allDreams, textFilter]);
 
   useEffect(() => {
     filterDreamsToShow();
@@ -147,7 +91,6 @@ export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
   async function handleRefresh(event: IonRefresherCustomEvent<RefresherEventDetail>) {
     console.log("Handling refresh");
     setShownDreams(allDreams);
-    setDateFilter({ startDate: null, endDate: null });
     setTextFilter("");
     event.detail.complete();
   }
@@ -159,7 +102,6 @@ export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
           <IonTitle>My Dreams</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <DateRange dateFilter={dateFilter} setDateFilter={setDateFilter} />
       <SearchBar setSearchFilter={setTextFilter} />
       <DreamList allDreams={shownDreams} handleRefresh={handleRefresh} />
     </IonPage>
