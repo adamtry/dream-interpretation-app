@@ -14,6 +14,8 @@ import { Dream } from "../types/Dream";
 
 import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonItem, IonPage } from "@ionic/react";
 
+import { searchCircle } from "ionicons/icons";
+
 function DreamCard(dream: Dream) {
   var formattedDate = new Date(dream.date).toLocaleDateString();
   return (
@@ -34,7 +36,14 @@ function SearchBar({ setSearchFilter }: { setSearchFilter: (searchFilter: string
         id="dreamSearch"
         type="text"
         placeholder="Search dreams"
-        onIonChange={(event) => setSearchFilter(event.detail.value!.toLowerCase())}
+        searchIcon={searchCircle}
+        showCancelButton="focus"
+        onIonInput={(ev) => {
+          let query = "";
+          const target = ev.target as HTMLIonSearchbarElement;
+          if (target) query = target.value!.toLowerCase();
+          setSearchFilter(query);
+        }}
       ></IonSearchbar>
     </IonItem>
   );
