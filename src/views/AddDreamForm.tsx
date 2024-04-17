@@ -29,7 +29,7 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
 
   async function onSubmit(data: any) {
     console.log("Form data:", data);
-    var resolvedTitle = data.title ? data.title : "Untitled";
+    var resolvedTitle = data.title || "Untitled";
     const dream = {
       title: resolvedTitle,
       description: data.description,
@@ -52,8 +52,7 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
       <IonContent className="ion-padding">
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonItem>
-            <IonInput {...register("date", { required: true })} value={today} type="date" label="Date" />
-            {errors.date && <p className="error-message">Date is required.</p>}
+            <IonInput {...register("date", { required: true })} value={today} type="date" label="Date" required />
           </IonItem>
 
           <IonItem>
@@ -66,8 +65,13 @@ export function AddDreamForm({ addDreamCallback }: AddDreamFormProps) {
           </IonItem>
 
           <IonItem>
-            <IonTextarea {...register("description")} rows={10} aria-label="Description" placeholder="Description..." />
-            {errors.description && <p className="error-message">Description is required.</p>}
+            <IonTextarea
+              {...register("description")}
+              rows={10}
+              aria-label="Description"
+              placeholder="Description..."
+              required
+            />
           </IonItem>
 
           <IonButton type="submit" expand="block">

@@ -12,7 +12,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { Dream } from "../types/Dream";
 
-import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonItem, IonPage } from "@ionic/react";
+import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonPage } from "@ionic/react";
 
 import { searchCircle } from "ionicons/icons";
 
@@ -31,21 +31,19 @@ function DreamCard(dream: Dream) {
 
 function SearchBar({ setSearchFilter }: { setSearchFilter: (searchFilter: string) => void }) {
   return (
-    <IonItem>
-      <IonSearchbar
-        id="dreamSearch"
-        type="text"
-        placeholder="Search dreams"
-        searchIcon={searchCircle}
-        showCancelButton="focus"
-        onIonInput={(ev) => {
-          let query = "";
-          const target = ev.target as HTMLIonSearchbarElement;
-          if (target) query = target.value!.toLowerCase();
-          setSearchFilter(query);
-        }}
-      ></IonSearchbar>
-    </IonItem>
+    <IonSearchbar
+      id="dreamSearch"
+      type="text"
+      placeholder="Search dreams"
+      searchIcon={searchCircle}
+      showCancelButton="focus"
+      onIonInput={(ev) => {
+        let query = "";
+        const target = ev.target as HTMLIonSearchbarElement;
+        if (target) query = target.value!.toLowerCase();
+        setSearchFilter(query);
+      }}
+    />
   );
 }
 
