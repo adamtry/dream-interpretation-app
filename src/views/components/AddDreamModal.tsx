@@ -16,14 +16,14 @@ import {
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import { useState } from "react";
 import { addDream } from "../../data/DB";
-import { DreamReq } from "../../types/Dream";
+import { Dream, DreamReq } from "../../types/Dream";
 
 import { useForm } from "react-hook-form";
 
 import { add, closeOutline } from "ionicons/icons";
 
 interface AddDreamFlowProps {
-  addDreamCallback: (dream: DreamReq) => void;
+  addDreamCallback: (dream: Dream) => void;
 }
 function AddDreamFlow({ addDreamCallback }: AddDreamFlowProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,10 +53,13 @@ function AddDreamFlow({ addDreamCallback }: AddDreamFlowProps) {
       description: data.description,
       date: data.date,
     };
-    await addDream(dream, addDreamCallback).then(() => {
-      console.log("Dream added!");
-    });
-    resetFormAndClose();
+    await addDream(dream, addDreamCallback)
+      .then(() => {
+        resetFormAndClose();
+      })
+      .catch((error) => {
+        console.error("Error adding dream: ", error);
+      });
   }
 
   return (

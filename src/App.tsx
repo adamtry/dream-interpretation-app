@@ -16,7 +16,6 @@ function App({ history }: AppProps) {
     var dr = [...dreams, dream];
     dr.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     setDreams(dr);
-    console.log("Dream added a123");
   }
 
   useEffect(() => {
@@ -44,7 +43,7 @@ function App({ history }: AppProps) {
       <IonReactRouter>
         <IonContent>
           <IonRouterOutlet>
-            <Route path="/my-dreams" render={() => <MyDreams allDreams={dreams} />} />
+            <Route path="/my-dreams" render={() => <MyDreams allDreams={dreams} addDreamProp={addDreamProp} />} />
             <Route path="/" exact render={() => <Redirect to="/my-dreams" />} />
           </IonRouterOutlet>
         </IonContent>

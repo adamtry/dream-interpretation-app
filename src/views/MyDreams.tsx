@@ -70,13 +70,11 @@ function DreamList({ allDreams, handleRefresh }: DreamListProps) {
   );
 }
 
-export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
+export function MyDreams({ allDreams, addDreamProp }: { allDreams: Dream[]; addDreamProp: (dream: Dream) => void }) {
   const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
   const [textFilter, setTextFilter] = useState<string>("");
 
   const filterDreamsToShow = useCallback(() => {
-    console.log("Filtering dreams");
-
     var filteredDreams = allDreams;
 
     // Filter by text
@@ -96,7 +94,6 @@ export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
   }, [filterDreamsToShow]);
 
   async function handleRefresh(event: IonRefresherCustomEvent<RefresherEventDetail>) {
-    console.log("Handling refresh");
     setShownDreams(allDreams);
     setTextFilter("");
     event.detail.complete();
@@ -111,7 +108,7 @@ export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
       </IonHeader>
       <SearchBar setSearchFilter={setTextFilter} />
       <DreamList allDreams={shownDreams} handleRefresh={handleRefresh} />
-      <AddDreamFlow addDreamCallback={(dream) => console.log("Dream added", dream)} />
+      <AddDreamFlow addDreamCallback={addDreamProp} />
     </IonPage>
   );
 }
