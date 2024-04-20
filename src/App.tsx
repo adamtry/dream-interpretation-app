@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { getAllDreams } from "./data/DB";
 import { Dream } from "./types/Dream";
-import { MyDreamsPage } from "./views/MyDreams/MyDreams";
+import { MyDreamsPage } from "./views/Dreams/Dreams";
 
 function App() {
   const [dreams, setDreams] = useState<Dream[]>([]);
@@ -51,7 +51,7 @@ function App() {
         <IonTabBar slot={"bottom"}>
           <IonTabButton tab="dreams" href="/dreams">
             <IonIcon icon={list} />
-            My Dreams
+            Dreams
           </IonTabButton>
         </IonTabBar>
       </IonReactRouter>
