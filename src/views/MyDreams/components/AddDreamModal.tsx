@@ -15,8 +15,8 @@ import {
 } from "@ionic/react";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import { useState } from "react";
-import { addDream } from "../../data/DB";
-import { Dream, DreamReq } from "../../types/Dream";
+import { addDream } from "../../../data/DB";
+import { Dream, DreamReq } from "../../../types/Dream";
 
 import { useForm } from "react-hook-form";
 
