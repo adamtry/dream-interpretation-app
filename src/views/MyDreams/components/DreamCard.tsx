@@ -5,7 +5,7 @@ import { Dream } from "../../../types/Dream";
 export function DreamCard(dream: Dream) {
   var formattedDate = new Date(dream.date).toLocaleDateString();
   return (
-    <Link to={`/dream/${dream.id}`} style={{ textDecoration: "none" }}>
+    <Link to={`/dreams/${dream.id}`} style={{ textDecoration: "none" }}>
       <IonCard key={dream.id}>
         <IonCardContent>
           <IonCardTitle>{dream.title}</IonCardTitle>

@@ -2,39 +2,30 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonFab,
-  IonFabButton,
   IonHeader,
   IonIcon,
   IonInput,
   IonItem,
-  IonModal,
+  IonPage,
   IonTextarea,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
-import { useState } from "react";
 import { addDream } from "../../data/DB";
 import { Dream, DreamReq } from "../../types/Dream";
 
 import { useForm } from "react-hook-form";
 
-import { add, closeOutline } from "ionicons/icons";
+import { closeOutline } from "ionicons/icons";
+import { RouteComponentProps } from "react-router-dom";
 
-interface AddDreamProps {
+interface AddDreamProps extends RouteComponentProps {
   addDreamCallback: (dream: Dream) => void;
 }
-function AddDream({ addDreamCallback }: AddDreamProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
-    resetFormAndClose();
-  }
-
+function AddDream({ addDreamCallback, history }: AddDreamProps) {
   const { register, handleSubmit, reset } = useForm();
 
-  function resetFormAndClose() {
+  function resetForm() {
     reset(
       {
         date: new Date().toISOString().split("T")[0],
@@ -43,7 +34,6 @@ function AddDream({ addDreamCallback }: AddDreamProps) {
       },
       { keepValues: false },
     );
-    setIsOpen(false);
   }
 
   async function onSubmit(data: any) {
@@ -55,69 +45,69 @@ function AddDream({ addDreamCallback }: AddDreamProps) {
     };
     await addDream(dream, addDreamCallback)
       .then(() => {
-        resetFormAndClose();
+        resetForm();
       })
       .catch((error) => {
         console.error("Error adding dream: ", error);
+      })
+      .finally(() => {
+        history.goBack();
       });
   }
 
   return (
-    <>
-      <IonFab vertical="bottom" horizontal="end" aria-label="add dream">
-        <IonFabButton onClick={() => setIsOpen(true)}>
-          <IonIcon icon={add} />
-        </IonFabButton>
-      </IonFab>
-      <IonModal isOpen={isOpen} onWillDismiss={onWillDismiss}>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Add Dream</IonTitle>
-            <IonButtons slot="end">
-              <IonButton onClick={() => setIsOpen(false)}>
-                <IonIcon slot="icon-only" icon={closeOutline} />
-              </IonButton>
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="ion-padding">
-          <form id="addDreamForm" onSubmit={handleSubmit(onSubmit)}>
-            <IonItem>
-              <IonInput
-                {...register("date", { required: true })}
-                value={new Date().toISOString().split("T")[0]}
-                type="date"
-                label="Date"
-                required
-              />
-            </IonItem>
-
-            <IonItem>
-              <IonInput
-                {...register("title", { required: false })}
-                defaultValue={"Untitled"}
-                placeholder="Untitled"
-                label="Title"
-              />
-            </IonItem>
-
-            <IonItem>
-              <IonTextarea
-                {...register("description", { required: true })}
-                rows={10}
-                aria-label="Description"
-                placeholder="Description..."
-                required
-              />
-            </IonItem>
-
-            <IonButton type="submit" expand="block">
-              Submit
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Add Dream</IonTitle>
+          <IonButtons slot="end">
+            <IonButton
+              onClick={() => {
+                history.goBack();
+              }}
+            >
+              <IonIcon slot="icon-only" icon={closeOutline} />
             </IonButton>
-          </form>
-        </IonContent>
-      </IonModal>
-    </>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        <form id="addDreamForm" onSubmit={handleSubmit(onSubmit)}>
+          <IonItem>
+            <IonInput
+              {...register("date", { required: true })}
+              value={new Date().toISOString().split("T")[0]}
+              type="date"
+              label="Date"
+              required
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonInput
+              {...register("title", { required: false })}
+              defaultValue={"Untitled"}
+              placeholder="Untitled"
+              label="Title"
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonTextarea
+              {...register("description", { required: true })}
+              rows={10}
+              aria-label="Description"
+              placeholder="Description..."
+              required
+            />
+          </IonItem>
+
+          <IonButton type="submit" expand="block">
+            Submit
+          </IonButton>
+        </form>
+      </IonContent>
+    </IonPage>
   );
 }
 

@@ -21,7 +21,7 @@ function DreamDetails({ allDreams }: DreamDetailsProps) {
         <IonToolbar>
           <IonTitle>{dream.title}</IonTitle>
           <IonButtons slot="end">
-            <IonButton routerLink={`/my-dreams`}>
+            <IonButton routerLink={`/dreams`}>
               <IonIcon slot="icon-only" icon={closeOutline} />
             </IonButton>
           </IonButtons>
