@@ -12,5 +12,6 @@
     "source.fixAll.eslint": "always",
     "source.organizeImports": "always",
     "source.addMissingImports": "always"
-  }
+  },
+  "editor.tabSize": 2
 }

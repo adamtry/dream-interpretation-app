@@ -1,32 +1,19 @@
-import {
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonPage,
-  IonTextarea,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
 import { addDream } from "../../data/DB";
 import { Dream, DreamReq } from "../../types/Dream";
 
 import { useForm } from "react-hook-form";
 
-import { closeOutline } from "ionicons/icons";
 import { RouteComponentProps } from "react-router-dom";
+import DreamForm from "../../components/DreamForm";
 
 interface AddDreamProps extends RouteComponentProps {
   addDreamCallback: (dream: Dream) => void;
 }
-function AddDream({ addDreamCallback, history }: AddDreamProps) {
-  const { register, handleSubmit, reset } = useForm();
+function AddDream({ addDreamCallback, history, ...props }: AddDreamProps) {
+  const form = useForm();
 
   function resetForm() {
-    reset(
+    form.reset(
       {
         date: new Date().toISOString().split("T")[0],
         title: "",
@@ -36,7 +23,7 @@ function AddDream({ addDreamCallback, history }: AddDreamProps) {
     );
   }
 
-  async function onSubmit(data: any) {
+  async function submitAction(data: any) {
     var resolvedTitle = data.title || "Untitled";
     const dream: DreamReq = {
       title: resolvedTitle,
@@ -55,56 +42,7 @@ function AddDream({ addDreamCallback, history }: AddDreamProps) {
       });
   }
 
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Add Dream</IonTitle>
-          <IonButtons slot="end">
-            <IonButton routerLink="/dreams">
-              <IonIcon slot="icon-only" icon={closeOutline} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent className="ion-padding">
-        <form id="addDreamForm" onSubmit={handleSubmit(onSubmit)}>
-          <IonItem>
-            <IonInput
-              {...register("date", { required: true })}
-              value={new Date().toISOString().split("T")[0]}
-              type="date"
-              label="Date"
-              required
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonInput
-              {...register("title", { required: false })}
-              defaultValue={"Untitled"}
-              placeholder="Untitled"
-              label="Title"
-            />
-          </IonItem>
-
-          <IonItem>
-            <IonTextarea
-              {...register("description", { required: true })}
-              rows={10}
-              aria-label="Description"
-              placeholder="Description..."
-              required
-            />
-          </IonItem>
-
-          <IonButton type="submit" expand="block">
-            Submit
-          </IonButton>
-        </form>
-      </IonContent>
-    </IonPage>
-  );
+  return <DreamForm form={form} formTitle="Add Dream" submitAction={submitAction} redirect="/dreams" />;
 }
 
 export default AddDream;
