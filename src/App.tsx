@@ -2,14 +2,12 @@ import { IonApp, IonContent, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton }
 import { IonReactRouter } from "@ionic/react-router";
 import { list } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import { Redirect, Route, RouteComponentProps } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import { getAllDreams } from "./data/DB";
 import { Dream } from "./types/Dream";
 import { MyDreams } from "./views/MyDreams";
 
-interface AppProps extends RouteComponentProps {}
-
-function App({ history }: AppProps) {
+function App() {
   const [dreams, setDreams] = useState<Dream[]>([]);
 
   function addDreamProp(dream: Dream) {

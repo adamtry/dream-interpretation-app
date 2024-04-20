@@ -20,20 +20,18 @@ import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
 
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
 import { App } from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
-function Root(props: RouteComponentProps<{}>) {
+function Root() {
   return (
     <React.StrictMode>
-      <App {...props} />
+      <App />
     </React.StrictMode>
   );
 }
-const routeComponentProps = {} as RouteComponentProps<{}>;
-root.render(<Root {...routeComponentProps} />);
+root.render(<Root />);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
