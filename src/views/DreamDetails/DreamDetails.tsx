@@ -24,13 +24,13 @@ function DreamDetails({ allDreams }: DreamDetailsProps) {
         <IonToolbar>
           <IonTitle>{dream.title}</IonTitle>
           <IonButtons slot="end">
-            <IonButton routerLink={`/dreams`}>
+            <IonButton>
               <IonIcon slot="icon-only" icon={trashOutline} />
             </IonButton>
-            <IonButton routerLink={`/dreams`}>
+            <IonButton>
               <IonIcon slot="icon-only" icon={createOutline} />
             </IonButton>
-            <IonButton onClick={() => history.goBack()}>
+            <IonButton routerLink="/dreams">
               <IonIcon slot="icon-only" icon={arrowBackOutline} />
             </IonButton>
           </IonButtons>

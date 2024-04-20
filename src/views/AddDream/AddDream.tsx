@@ -61,11 +61,7 @@ function AddDream({ addDreamCallback, history }: AddDreamProps) {
         <IonToolbar>
           <IonTitle>Add Dream</IonTitle>
           <IonButtons slot="end">
-            <IonButton
-              onClick={() => {
-                history.goBack();
-              }}
-            >
+            <IonButton routerLink="/dreams">
               <IonIcon slot="icon-only" icon={closeOutline} />
             </IonButton>
           </IonButtons>
