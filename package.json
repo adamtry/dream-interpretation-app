@@ -14,13 +14,12 @@
     "build:android": "ionic capacitor build android --no-open"
   },
   "dependencies": {
-    "@capacitor/android": "^5.7.4",
-    "@capacitor/app": "5.0.7",
-    "@capacitor/cli": "^5.7.4",
-    "@capacitor/core": "^5.7.4",
-    "@capacitor/haptics": "5.0.7",
-    "@capacitor/keyboard": "5.0.8",
-    "@capacitor/status-bar": "5.0.7",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/haptics": "^6.0.0",
+    "@capacitor/keyboard": "^6.0.0",
+    "@capacitor/status-bar": "^6.0.0",
     "@ionic/react": "^8.0.0-rc.2",
     "@ionic/react-router": "^8.0.0-rc.2",
     "@testing-library/jest-dom": "^5.17.0",
@@ -70,7 +69,8 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-private-property-in-object": "^7.24.1",
+    "@capacitor/cli": "^6.0.0",
     "@ionic/cli": "^7.2.0",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/parser": "^5.62.0",

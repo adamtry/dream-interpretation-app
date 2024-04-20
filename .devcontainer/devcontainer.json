@@ -5,7 +5,17 @@
   "dockerFile": "Dockerfile",
   // "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
   "features": {
-    "ghcr.io/devcontainers-contrib/features/firebase-cli:2": {}
+    "ghcr.io/devcontainers-contrib/features/firebase-cli:2": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "jdkDistro": "oracle",
+      "gradleVersion": "latest",
+      "mavenVersion": "latest",
+      "antVersion": "latest",
+      "groovyVersion": "latest"
+    }
   },
   "customizations": {
     "vscode": {
