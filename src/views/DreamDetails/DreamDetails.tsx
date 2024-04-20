@@ -5,11 +5,14 @@ import { useParams } from "react-router";
 import { arrowBackOutline, createOutline, trashOutline } from "ionicons/icons";
 import { Dream } from "../../types/Dream";
 
+import { useHistory } from "react-router-dom";
+
 interface DreamDetailsProps {
   allDreams: Dream[];
 }
 function DreamDetails({ allDreams }: DreamDetailsProps) {
   const { id } = useParams<{ id: string }>();
+  const history = useHistory();
   const dream = allDreams.find((dream) => dream.id === id);
   if (!dream) {
     return <div>Dream not found</div>;
@@ -27,7 +30,7 @@ function DreamDetails({ allDreams }: DreamDetailsProps) {
             <IonButton routerLink={`/dreams`}>
               <IonIcon slot="icon-only" icon={createOutline} />
             </IonButton>
-            <IonButton routerLink={`/dreams`}>
+            <IonButton onClick={() => history.goBack()}>
               <IonIcon slot="icon-only" icon={arrowBackOutline} />
             </IonButton>
           </IonButtons>

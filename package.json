@@ -5,10 +5,7 @@
   "scripts": {
     "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
-    "serve": "serve -s build",
-    "test": "react-scripts test --watchAll=false",
     "ci": "echo 'CI TBD'",
-    "eject": "react-scripts eject",
     "ionic:build": "npm run build",
     "ionic:serve": "npm run serve",
     "build:android": "ionic capacitor build android --no-open"
