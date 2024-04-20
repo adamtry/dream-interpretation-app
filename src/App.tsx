@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { getAllDreams } from "./data/DB";
 import { Dream } from "./types/Dream";
-import { MyDreams } from "./views/MyDreams";
+import DreamDetails from "./views/DreamDetails/DreamDetails";
+import { MyDreams } from "./views/MyDreams/MyDreams";
 
 function App() {
   const [dreams, setDreams] = useState<Dream[]>([]);
@@ -41,6 +42,7 @@ function App() {
       <IonReactRouter>
         <IonContent>
           <IonRouterOutlet>
+            <Route path="/dream/:id" render={() => <DreamDetails allDreams={dreams} />} />
             <Route path="/my-dreams" render={() => <MyDreams allDreams={dreams} addDreamProp={addDreamProp} />} />
             <Route path="/" exact render={() => <Redirect to="/my-dreams" />} />
           </IonRouterOutlet>

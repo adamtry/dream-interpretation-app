@@ -1,4 +1,3 @@
-import { IonRefresherCustomEvent } from "@ionic/core";
 import {
   IonContent,
   IonHeader,
@@ -9,25 +8,29 @@ import {
   IonToolbar,
   RefresherEventDetail,
 } from "@ionic/react";
-import { useCallback, useEffect, useState } from "react";
-import { Dream } from "../types/Dream";
+import { Dream } from "../../types/Dream";
 
 import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonPage } from "@ionic/react";
 
 import { searchCircle } from "ionicons/icons";
 
+import { IonRefresherCustomEvent } from "@ionic/core";
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import AddDreamFlow from "./components/AddDreamModal";
 
 function DreamCard(dream: Dream) {
   var formattedDate = new Date(dream.date).toLocaleDateString();
   return (
-    <IonCard key={dream.id}>
-      <IonCardContent>
-        <IonCardTitle>{dream.title}</IonCardTitle>
-        <p>{dream.description}</p>
-        <IonCardSubtitle>{formattedDate}</IonCardSubtitle>
-      </IonCardContent>
-    </IonCard>
+    <Link to={`/dream/${dream.id}`} style={{ textDecoration: "none" }}>
+      <IonCard key={dream.id}>
+        <IonCardContent>
+          <IonCardTitle>{dream.title}</IonCardTitle>
+          <p>{dream.description}</p>
+          <IonCardSubtitle>{formattedDate}</IonCardSubtitle>
+        </IonCardContent>
+      </IonCard>
+    </Link>
   );
 }
 
@@ -77,7 +80,6 @@ export function MyDreams({ allDreams, addDreamProp }: { allDreams: Dream[]; addD
   const filterDreamsToShow = useCallback(() => {
     var filteredDreams = allDreams;
 
-    // Filter by text
     if (textFilter) {
       const match = (dream: Dream, searchFilter: string) => {
         var titleMatch = dream.title.toLowerCase().includes(searchFilter.toLowerCase());
@@ -95,7 +97,7 @@ export function MyDreams({ allDreams, addDreamProp }: { allDreams: Dream[]; addD
 
   async function handleRefresh(event: IonRefresherCustomEvent<RefresherEventDetail>) {
     setShownDreams(allDreams);
-    setTextFilter("");
+    (document.getElementById("dreamSearch") as HTMLIonSearchbarElement).value = "";
     event.detail.complete();
   }
 
