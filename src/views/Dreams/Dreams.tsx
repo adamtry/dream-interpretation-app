@@ -74,30 +74,28 @@ function MyDreams({ allDreams }: { allDreams: Dream[] }) {
   }
 
   return (
-    <>
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>My Dreams</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <SearchBar setSearchFilter={setTextFilter} />
-        <IonContent>
-          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-            <IonRefresherContent></IonRefresherContent>
-          </IonRefresher>
-          {shownDreams.map((dream) => (
-            <DreamCard {...dream} key={dream.id} />
-          ))}
-        </IonContent>
-        <Link to="/dreams/add">
-          <IonFab vertical="bottom" horizontal="end" aria-label="add dream">
-            <IonFabButton>
-              <IonIcon icon={add} />
-            </IonFabButton>
-          </IonFab>
-        </Link>
-      </IonPage>
-    </>
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>My Dreams</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <SearchBar setSearchFilter={setTextFilter} />
+      <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
+        {shownDreams.map((dream) => (
+          <DreamCard {...dream} key={dream.id} />
+        ))}
+      </IonContent>
+      <Link to="/dreams/add">
+        <IonFab vertical="bottom" horizontal="end" aria-label="add dream">
+          <IonFabButton>
+            <IonIcon icon={add} />
+          </IonFabButton>
+        </IonFab>
+      </Link>
+    </IonPage>
   );
 }

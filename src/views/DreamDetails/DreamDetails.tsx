@@ -1,9 +1,9 @@
 import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 import {} from "ionicons/icons";
 import { useParams } from "react-router";
-import { Dream } from "../../types/Dream";
 
-import { closeOutline } from "ionicons/icons";
+import { arrowBackOutline, createOutline, trashOutline } from "ionicons/icons";
+import { Dream } from "../../types/Dream";
 
 interface DreamDetailsProps {
   allDreams: Dream[];
@@ -22,12 +22,19 @@ function DreamDetails({ allDreams }: DreamDetailsProps) {
           <IonTitle>{dream.title}</IonTitle>
           <IonButtons slot="end">
             <IonButton routerLink={`/dreams`}>
-              <IonIcon slot="icon-only" icon={closeOutline} />
+              <IonIcon slot="icon-only" icon={trashOutline} />
+            </IonButton>
+            <IonButton routerLink={`/dreams`}>
+              <IonIcon slot="icon-only" icon={createOutline} />
+            </IonButton>
+            <IonButton routerLink={`/dreams`}>
+              <IonIcon slot="icon-only" icon={arrowBackOutline} />
             </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
+        <h1>{dream.title}</h1>
         <p>{dream.description}</p>
         <p>{new Date(dream.date).toLocaleDateString()}</p>
       </IonContent>
