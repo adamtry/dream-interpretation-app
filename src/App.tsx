@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { getAllDreams } from "./data/DB";
 import { Dream } from "./types/Dream";
-import DreamDetails from "./views/DreamDetails/DreamDetails";
-import { MyDreams } from "./views/MyDreams/MyDreams";
+import { MyDreamsPage } from "./views/MyDreams/MyDreams";
 
 function App() {
   const [dreams, setDreams] = useState<Dream[]>([]);
@@ -42,13 +41,15 @@ function App() {
       <IonReactRouter>
         <IonContent>
           <IonRouterOutlet>
-            <Route path="/dream/:id" render={() => <DreamDetails allDreams={dreams} />} />
-            <Route path="/my-dreams" render={() => <MyDreams allDreams={dreams} addDreamProp={addDreamProp} />} />
-            <Route path="/" exact render={() => <Redirect to="/my-dreams" />} />
+            <Route
+              path="/dreams"
+              render={(props) => <MyDreamsPage {...props} allDreams={dreams} addDreamProp={addDreamProp} />}
+            />
+            <Route path="/" exact render={() => <Redirect to="/dreams" />} />
           </IonRouterOutlet>
         </IonContent>
         <IonTabBar slot={"bottom"}>
-          <IonTabButton tab="my-dreams" href="/my-dreams">
+          <IonTabButton tab="dreams" href="/dreams">
             <IonIcon icon={list} />
             My Dreams
           </IonTabButton>

@@ -15,7 +15,8 @@
         "rvest.vs-code-prettier-eslint",
         "github.vscode-github-actions",
         "ms-azuretools.vscode-docker",
-        "Ionic.ionic"
+        "Ionic.ionic",
+        "jsayol.firebase-explorer"
       ]
     }
   },

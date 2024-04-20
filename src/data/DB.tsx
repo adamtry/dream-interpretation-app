@@ -24,8 +24,9 @@ async function addDream(dreamReq: DreamReq, callback: (dream: Dream) => void) {
   console.log(
     `Adding dream: ${dreamReq.title} ${dreamReq.description} ${dreamReq.date} to Firestore ${firestore.app.options.projectId}`,
   );
-  // callback(dream);
+
   await addDoc(collection(firestore, "dreams"), dreamReq).then((docRef) => {
+    console.log("Document written with ID: ", docRef.id);
     const dream = {
       id: docRef.id,
       ...dreamReq,
