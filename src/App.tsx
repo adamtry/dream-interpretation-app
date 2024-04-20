@@ -1,11 +1,10 @@
 import { IonApp, IonContent, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { add, list } from "ionicons/icons";
+import { list } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { Redirect, Route, RouteComponentProps } from "react-router-dom";
 import { getAllDreams } from "./data/DB";
 import { Dream } from "./types/Dream";
-import { AddDreamForm } from "./views/AddDreamForm";
 import { MyDreams } from "./views/MyDreams";
 
 interface AppProps extends RouteComponentProps {}
@@ -17,7 +16,6 @@ function App({ history }: AppProps) {
     var dr = [...dreams, dream];
     dr.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     setDreams(dr);
-    console.log("Dream added a123");
   }
 
   useEffect(() => {
@@ -45,16 +43,11 @@ function App({ history }: AppProps) {
       <IonReactRouter>
         <IonContent>
           <IonRouterOutlet>
-            <Route path="/add-dream" render={() => <AddDreamForm addDreamCallback={addDreamProp} />} />
-            <Route path="/my-dreams" render={() => <MyDreams allDreams={dreams} />} />
-            <Route path="/" exact render={() => <Redirect to="/add-dream" />} />
+            <Route path="/my-dreams" render={() => <MyDreams allDreams={dreams} addDreamProp={addDreamProp} />} />
+            <Route path="/" exact render={() => <Redirect to="/my-dreams" />} />
           </IonRouterOutlet>
         </IonContent>
         <IonTabBar slot={"bottom"}>
-          <IonTabButton tab="add-dream" href="/add-dream">
-            <IonIcon icon={add} />
-            Add Dream
-          </IonTabButton>
           <IonTabButton tab="my-dreams" href="/my-dreams">
             <IonIcon icon={list} />
             My Dreams
