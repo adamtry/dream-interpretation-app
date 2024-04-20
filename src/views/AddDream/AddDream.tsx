@@ -15,17 +15,17 @@ import {
 } from "@ionic/react";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import { useState } from "react";
-import { addDream } from "../../../data/DB";
-import { Dream, DreamReq } from "../../../types/Dream";
+import { addDream } from "../../data/DB";
+import { Dream, DreamReq } from "../../types/Dream";
 
 import { useForm } from "react-hook-form";
 
 import { add, closeOutline } from "ionicons/icons";
 
-interface AddDreamFlowProps {
+interface AddDreamProps {
   addDreamCallback: (dream: Dream) => void;
 }
-function AddDreamFlow({ addDreamCallback }: AddDreamFlowProps) {
+function AddDream({ addDreamCallback }: AddDreamProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
@@ -121,4 +121,4 @@ function AddDreamFlow({ addDreamCallback }: AddDreamFlowProps) {
   );
 }
 
-export default AddDreamFlow;
+export default AddDream;

@@ -3,75 +3,19 @@ import {
   IonHeader,
   IonRefresher,
   IonRefresherContent,
-  IonSearchbar,
   IonTitle,
   IonToolbar,
   RefresherEventDetail,
 } from "@ionic/react";
 import { Dream } from "../../types/Dream";
 
-import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonPage } from "@ionic/react";
-
-import { searchCircle } from "ionicons/icons";
+import { IonPage } from "@ionic/react";
 
 import { IonRefresherCustomEvent } from "@ionic/core";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import AddDreamFlow from "./components/AddDreamModal";
-
-function DreamCard(dream: Dream) {
-  var formattedDate = new Date(dream.date).toLocaleDateString();
-  return (
-    <Link to={`/dream/${dream.id}`} style={{ textDecoration: "none" }}>
-      <IonCard key={dream.id}>
-        <IonCardContent>
-          <IonCardTitle>{dream.title}</IonCardTitle>
-          <p>{dream.description}</p>
-          <IonCardSubtitle>{formattedDate}</IonCardSubtitle>
-        </IonCardContent>
-      </IonCard>
-    </Link>
-  );
-}
-
-function SearchBar({ setSearchFilter }: { setSearchFilter: (searchFilter: string) => void }) {
-  return (
-    <IonSearchbar
-      id="dreamSearch"
-      type="text"
-      placeholder="Search dreams"
-      searchIcon={searchCircle}
-      showCancelButton="focus"
-      onIonInput={(ev) => {
-        let query = "";
-        const target = ev.target as HTMLIonSearchbarElement;
-        if (target) query = target.value!.toLowerCase();
-        setSearchFilter(query);
-      }}
-    />
-  );
-}
-
-interface DreamListProps {
-  allDreams: Dream[];
-  handleRefresh: (event: IonRefresherCustomEvent<RefresherEventDetail>) => void;
-}
-function DreamList({ allDreams, handleRefresh }: DreamListProps) {
-  const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
-  useEffect(() => {
-    setShownDreams(allDreams);
-  }, [allDreams]);
-  return (
-    <IonContent>
-      <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-        <IonRefresherContent></IonRefresherContent>
-      </IonRefresher>
-      {shownDreams.map((dream) => (
-        <DreamCard {...dream} key={dream.id} />
-      ))}
-    </IonContent>
-  );
-}
+import AddDream from "../AddDream/AddDream";
+import { DreamCard } from "./components/DreamCard";
+import { SearchBar } from "./components/SearchBar";
 
 export function MyDreams({ allDreams, addDreamProp }: { allDreams: Dream[]; addDreamProp: (dream: Dream) => void }) {
   const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
@@ -109,8 +53,15 @@ export function MyDreams({ allDreams, addDreamProp }: { allDreams: Dream[]; addD
         </IonToolbar>
       </IonHeader>
       <SearchBar setSearchFilter={setTextFilter} />
-      <DreamList allDreams={shownDreams} handleRefresh={handleRefresh} />
-      <AddDreamFlow addDreamCallback={addDreamProp} />
+      <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
+        {shownDreams.map((dream) => (
+          <DreamCard {...dream} key={dream.id} />
+        ))}
+      </IonContent>
+      <AddDream addDreamCallback={addDreamProp} />
     </IonPage>
   );
 }
