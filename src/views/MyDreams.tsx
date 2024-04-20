@@ -16,6 +16,8 @@ import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonPage } from 
 
 import { searchCircle } from "ionicons/icons";
 
+import AddDreamFlow from "./components/AddDreamModal";
+
 function DreamCard(dream: Dream) {
   var formattedDate = new Date(dream.date).toLocaleDateString();
   return (
@@ -47,13 +49,11 @@ function SearchBar({ setSearchFilter }: { setSearchFilter: (searchFilter: string
   );
 }
 
-function DreamList({
-  allDreams,
-  handleRefresh,
-}: {
+interface DreamListProps {
   allDreams: Dream[];
   handleRefresh: (event: IonRefresherCustomEvent<RefresherEventDetail>) => void;
-}) {
+}
+function DreamList({ allDreams, handleRefresh }: DreamListProps) {
   const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
   useEffect(() => {
     setShownDreams(allDreams);
@@ -111,6 +111,7 @@ export function MyDreams({ allDreams }: { allDreams: Dream[] }) {
       </IonHeader>
       <SearchBar setSearchFilter={setTextFilter} />
       <DreamList allDreams={shownDreams} handleRefresh={handleRefresh} />
+      <AddDreamFlow addDreamCallback={(dream) => console.log("Dream added", dream)} />
     </IonPage>
   );
 }
