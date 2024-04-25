@@ -4,7 +4,7 @@ import { Dream, DreamReq } from "../../types/Dream";
 import { useForm } from "react-hook-form";
 
 import { RouteComponentProps } from "react-router-dom";
-import DreamForm from "../../components/DreamForm";
+import DreamForm from "../_components/DreamForm";
 
 interface AddDreamProps extends RouteComponentProps {
   addDreamCallback: (dream: Dream) => void;
@@ -24,13 +24,9 @@ function AddDream({ addDreamCallback, history, ...props }: AddDreamProps) {
   }
 
   async function submitAction(data: any) {
-    var resolvedTitle = data.title || "Untitled";
-    const dream: DreamReq = {
-      title: resolvedTitle,
-      description: data.description,
-      date: data.date,
-    };
-    await addDream(dream, addDreamCallback)
+    const dreamData = data as DreamReq;
+    dreamData.title = dreamData.title || "Untitled";
+    await addDream(dreamData, addDreamCallback)
       .then(() => {
         resetForm();
       })

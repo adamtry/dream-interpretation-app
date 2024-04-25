@@ -34,7 +34,8 @@ function App() {
       });
       setDreams(incomingDreams);
     });
-  }, [dreams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <IonApp>
@@ -43,7 +44,7 @@ function App() {
           <IonRouterOutlet>
             <Route
               path="/dreams"
-              render={(props) => <MyDreamsPage {...props} allDreams={dreams} addDreamProp={addDreamProp} />}
+              render={(props) => <MyDreamsPage allDreams={dreams} {...props} addDreamProp={addDreamProp} />}
             />
             <Route path="/" exact render={() => <Redirect to="/dreams" />} />
           </IonRouterOutlet>

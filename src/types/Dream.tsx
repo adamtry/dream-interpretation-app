@@ -10,3 +10,7 @@ export interface Dream {
  * It matches the schema of Dream, but the id is not set
  */
 export interface DreamReq extends Omit<Dream, "id"> {}
+
+export interface DreamUpdate extends Partial<Dream> {
+  id: string;
+}

@@ -11,7 +11,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { DreamReq } from "../types/Dream";
+import { DreamReq, DreamUpdate } from "../../types/Dream";
 
 import { UseFormReturn } from "react-hook-form";
 
@@ -20,7 +20,7 @@ import { closeOutline } from "ionicons/icons";
 interface DreamFormProps {
   form: UseFormReturn<any>;
   formTitle: string;
-  submitAction: (dream: DreamReq) => Promise<void>;
+  submitAction: (dream: DreamReq | DreamUpdate) => Promise<void>;
   redirect: string;
   presetValues?: DreamReq;
 }
@@ -80,7 +80,7 @@ function DreamForm({ form, formTitle, presetValues, submitAction, redirect }: Dr
           <IonItem>
             <IonInput
               {...register("title", { required: false })}
-              defaultValue={presetValues?.title || "Untitled"}
+              value={presetValues?.title || ""}
               placeholder="Untitled"
               label="Title"
             />
@@ -89,7 +89,7 @@ function DreamForm({ form, formTitle, presetValues, submitAction, redirect }: Dr
           <IonItem>
             <IonTextarea
               {...register("description", { required: true })}
-              defaultValue={presetValues?.description || ""}
+              value={presetValues?.description || ""}
               rows={10}
               aria-label="Description"
               placeholder="Description..."

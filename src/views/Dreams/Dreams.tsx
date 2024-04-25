@@ -22,6 +22,7 @@ import { Route, RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import AddDream from "../AddDream/AddDream";
 import DreamDetails from "../DreamDetails/DreamDetails";
+import EditDream from "../EditDream/EditDream";
 import { DreamCard } from "./components/DreamCard";
 import { SearchBar } from "./components/SearchBar";
 
@@ -34,7 +35,12 @@ export function MyDreamsPage({ allDreams, addDreamProp, match }: MyDreamsPagePro
     <IonPage>
       <IonRouterOutlet>
         <Route exact path={match.url} render={() => <MyDreams allDreams={allDreams} />} />
-        <Route exact path={`${match.url}/:id`} render={() => <DreamDetails allDreams={allDreams} />} />
+        <Route exact path={`${match.url}/:id`} component={DreamDetails} />
+        <Route
+          exact
+          path={`${match.url}/:id/edit`}
+          render={(props) => <EditDream allDreams={allDreams} {...props} />}
+        />
         <Route
           exact
           path={`${match.url}/add`}
@@ -45,7 +51,11 @@ export function MyDreamsPage({ allDreams, addDreamProp, match }: MyDreamsPagePro
   );
 }
 
-function MyDreams({ allDreams }: { allDreams: Dream[] }) {
+interface MyDreamsProps {
+  allDreams: Dream[];
+}
+
+function MyDreams({ allDreams }: MyDreamsProps) {
   const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
   const [textFilter, setTextFilter] = useState<string>("");
 
