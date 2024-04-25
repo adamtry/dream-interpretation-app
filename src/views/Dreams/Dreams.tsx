@@ -19,7 +19,8 @@ import { IonRefresherCustomEvent } from "@ionic/core";
 import { add } from "ionicons/icons";
 import { useCallback, useEffect, useState } from "react";
 import { Route, RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { getAllDreams } from "../../data/DB";
 import AddDream from "../AddDream/AddDream";
 import DreamDetails from "../DreamDetails/DreamDetails";
 import EditDream from "../EditDream/EditDream";
@@ -56,29 +57,40 @@ interface MyDreamsProps {
 }
 
 function MyDreams({ allDreams }: MyDreamsProps) {
+  const location = useLocation();
+  const [dreams, setDreams] = useState<Dream[]>(allDreams);
   const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
   const [textFilter, setTextFilter] = useState<string>("");
 
   const filterDreamsToShow = useCallback(() => {
-    var filteredDreams = allDreams;
-
+    var filteredDreams = dreams;
     if (textFilter) {
       const match = (dream: Dream, searchFilter: string) => {
         var titleMatch = dream.title.toLowerCase().includes(searchFilter.toLowerCase());
         var descriptionMatch = dream.description.toLowerCase().includes(searchFilter.toLowerCase());
         return titleMatch || descriptionMatch;
       };
-      filteredDreams = allDreams.filter((dream) => match(dream, textFilter));
+      filteredDreams = dreams.filter((dream) => match(dream, textFilter));
     }
     setShownDreams(filteredDreams);
-  }, [allDreams, textFilter]);
+  }, [dreams, textFilter]);
+
+  useEffect(() => {
+    getAllDreams().then((dr) => {
+      setShownDreams(dr);
+      setDreams(dr);
+    });
+  }, [location.key]);
 
   useEffect(() => {
     filterDreamsToShow();
   }, [filterDreamsToShow]);
 
   async function handleRefresh(event: IonRefresherCustomEvent<RefresherEventDetail>) {
-    setShownDreams(allDreams);
+    getAllDreams().then((dr) => {
+      setShownDreams(dr);
+      setDreams(dr);
+    });
     (document.getElementById("dreamSearch") as HTMLIonSearchbarElement).value = "";
     event.detail.complete();
   }
