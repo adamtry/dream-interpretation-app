@@ -19,9 +19,11 @@ import { IonRefresherCustomEvent } from "@ionic/core";
 import { add } from "ionicons/icons";
 import { useCallback, useEffect, useState } from "react";
 import { Route, RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { getAllDreams } from "../../data/DB";
 import AddDream from "../AddDream/AddDream";
 import DreamDetails from "../DreamDetails/DreamDetails";
+import EditDream from "../EditDream/EditDream";
 import { DreamCard } from "./components/DreamCard";
 import { SearchBar } from "./components/SearchBar";
 
@@ -34,7 +36,12 @@ export function MyDreamsPage({ allDreams, addDreamProp, match }: MyDreamsPagePro
     <IonPage>
       <IonRouterOutlet>
         <Route exact path={match.url} render={() => <MyDreams allDreams={allDreams} />} />
-        <Route exact path={`${match.url}/:id`} render={() => <DreamDetails allDreams={allDreams} />} />
+        <Route exact path={`${match.url}/:id`} component={DreamDetails} />
+        <Route
+          exact
+          path={`${match.url}/:id/edit`}
+          render={(props) => <EditDream allDreams={allDreams} {...props} />}
+        />
         <Route
           exact
           path={`${match.url}/add`}
@@ -45,59 +52,72 @@ export function MyDreamsPage({ allDreams, addDreamProp, match }: MyDreamsPagePro
   );
 }
 
-function MyDreams({ allDreams }: { allDreams: Dream[] }) {
+interface MyDreamsProps {
+  allDreams: Dream[];
+}
+
+function MyDreams({ allDreams }: MyDreamsProps) {
+  const location = useLocation();
+  const [dreams, setDreams] = useState<Dream[]>(allDreams);
   const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
   const [textFilter, setTextFilter] = useState<string>("");
 
   const filterDreamsToShow = useCallback(() => {
-    var filteredDreams = allDreams;
-
+    var filteredDreams = dreams;
     if (textFilter) {
       const match = (dream: Dream, searchFilter: string) => {
         var titleMatch = dream.title.toLowerCase().includes(searchFilter.toLowerCase());
         var descriptionMatch = dream.description.toLowerCase().includes(searchFilter.toLowerCase());
         return titleMatch || descriptionMatch;
       };
-      filteredDreams = allDreams.filter((dream) => match(dream, textFilter));
+      filteredDreams = dreams.filter((dream) => match(dream, textFilter));
     }
     setShownDreams(filteredDreams);
-  }, [allDreams, textFilter]);
+  }, [dreams, textFilter]);
+
+  useEffect(() => {
+    getAllDreams().then((dr) => {
+      setShownDreams(dr);
+      setDreams(dr);
+    });
+  }, [location.key]);
 
   useEffect(() => {
     filterDreamsToShow();
   }, [filterDreamsToShow]);
 
   async function handleRefresh(event: IonRefresherCustomEvent<RefresherEventDetail>) {
-    setShownDreams(allDreams);
+    getAllDreams().then((dr) => {
+      setShownDreams(dr);
+      setDreams(dr);
+    });
     (document.getElementById("dreamSearch") as HTMLIonSearchbarElement).value = "";
     event.detail.complete();
   }
 
   return (
-    <>
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>My Dreams</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <SearchBar setSearchFilter={setTextFilter} />
-        <IonContent>
-          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-            <IonRefresherContent></IonRefresherContent>
-          </IonRefresher>
-          {shownDreams.map((dream) => (
-            <DreamCard {...dream} key={dream.id} />
-          ))}
-        </IonContent>
-        <Link to="/dreams/add">
-          <IonFab vertical="bottom" horizontal="end" aria-label="add dream">
-            <IonFabButton>
-              <IonIcon icon={add} />
-            </IonFabButton>
-          </IonFab>
-        </Link>
-      </IonPage>
-    </>
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>My Dreams</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <SearchBar setSearchFilter={setTextFilter} />
+      <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
+        {shownDreams.map((dream) => (
+          <DreamCard {...dream} key={dream.id} />
+        ))}
+      </IonContent>
+      <Link to="/dreams/add">
+        <IonFab vertical="bottom" horizontal="end" aria-label="add dream">
+          <IonFabButton>
+            <IonIcon icon={add} />
+          </IonFabButton>
+        </IonFab>
+      </Link>
+    </IonPage>
   );
 }

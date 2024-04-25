@@ -4,8 +4,17 @@ import { Dream } from "../../../types/Dream";
 
 export function DreamCard(dream: Dream) {
   var formattedDate = new Date(dream.date).toLocaleDateString();
+  const linkUrl = `/dreams/${dream.id}`;
   return (
-    <Link to={`/dreams/${dream.id}`} style={{ textDecoration: "none" }}>
+    <Link
+      to={{
+        pathname: linkUrl,
+        state: {
+          dream: dream,
+        },
+      }}
+      style={{ textDecoration: "none" }}
+    >
       <IonCard key={dream.id}>
         <IonCardContent>
           <IonCardTitle>{dream.title}</IonCardTitle>
