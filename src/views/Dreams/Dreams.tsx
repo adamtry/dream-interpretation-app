@@ -17,7 +17,7 @@ import { IonPage } from "@ionic/react";
 
 import { IonRefresherCustomEvent } from "@ionic/core";
 import { add } from "ionicons/icons";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, RouteComponentProps } from "react-router";
 import { Link, useLocation } from "react-router-dom";
 import { getAllDreams } from "../../data/DB";
@@ -62,37 +62,35 @@ function MyDreams({ allDreams }: MyDreamsProps) {
   const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
   const [textFilter, setTextFilter] = useState<string>("");
 
-  const filterDreamsToShow = useCallback(() => {
-    var filteredDreams = dreams;
-    if (textFilter) {
-      const match = (dream: Dream, searchFilter: string) => {
+  function filterDreams(searchFilter: string, dreams: Dream[]) {
+    return dreams
+      .filter((dream) => {
         var titleMatch = dream.title.toLowerCase().includes(searchFilter.toLowerCase());
         var descriptionMatch = dream.description.toLowerCase().includes(searchFilter.toLowerCase());
         return titleMatch || descriptionMatch;
-      };
-      filteredDreams = dreams.filter((dream) => match(dream, textFilter));
-    }
-    setShownDreams(filteredDreams);
-  }, [dreams, textFilter]);
+      })
+      .sort((a, b) => {
+        return new Date(a.date) < new Date(b.date) ? 1 : -1;
+      });
+  }
 
   useEffect(() => {
-    getAllDreams().then((dr) => {
-      setShownDreams(dr);
-      setDreams(dr);
-    });
+    const filteredDreams = filterDreams(textFilter, dreams);
+    setShownDreams(filteredDreams);
+  }, [textFilter, dreams]);
+
+  useEffect(() => {
+    handleRefresh();
   }, [location.key]);
 
-  useEffect(() => {
-    filterDreamsToShow();
-  }, [filterDreamsToShow]);
-
-  async function handleRefresh(event: IonRefresherCustomEvent<RefresherEventDetail>) {
+  async function handleRefresh(event?: IonRefresherCustomEvent<RefresherEventDetail>) {
     getAllDreams().then((dr) => {
-      setShownDreams(dr);
-      setDreams(dr);
+      const dreamRes = filterDreams(textFilter, dr);
+      setShownDreams(dreamRes);
+      setDreams(dreamRes);
     });
     (document.getElementById("dreamSearch") as HTMLIonSearchbarElement).value = "";
-    event.detail.complete();
+    event?.detail.complete();
   }
 
   return (

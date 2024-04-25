@@ -63,7 +63,7 @@ function DreamDetails({ history }: RouteComponentProps) {
 
   useEffect(() => {
     getDream(id).then((dream) => {
-      setDream(dream);
+      if (dream) setDream(dream);
     });
   }, [id, location.key]);
 

@@ -46,7 +46,7 @@ function App() {
               path="/dreams"
               render={(props) => <MyDreamsPage allDreams={dreams} {...props} addDreamProp={addDreamProp} />}
             />
-            <Route path="/" exact render={() => <Redirect to="/dreams" />} />
+            <Redirect to={"/dreams"} />
           </IonRouterOutlet>
         </IonContent>
         <IonTabBar slot={"bottom"}>
