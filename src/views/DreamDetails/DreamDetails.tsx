@@ -24,16 +24,27 @@ interface ConfirmDeleteAlertProps {
   handleDelete: () => void;
 }
 function ConfirmDeleteAlert({ dream, handleDelete }: ConfirmDeleteAlertProps) {
+  const [showAlert, setShowAlert] = useState(false);
+
+  function onDeletePressed() {
+    setShowAlert(false);
+    handleDelete();
+  }
+
   return (
     <>
-      <IonButton id="present-alert">
+      <IonButton onClick={() => setShowAlert(true)}>
         <IonIcon slot="icon-only" icon={trashOutline} />
       </IonButton>
       <IonAlert
-        trigger="present-alert"
+        isOpen={showAlert}
+        onWillDismiss={() => setShowAlert(false)}
         header={`Delete ${dream.title}?`}
         message="Are you sure you want to delete this dream? This action cannot be undone."
-        buttons={["Cancel", { text: "DELETE", handler: handleDelete }]}
+        buttons={[
+          { text: "CANCEL", handler: () => setShowAlert(false) },
+          { text: "DELETE", handler: onDeletePressed },
+        ]}
       />
     </>
   );
