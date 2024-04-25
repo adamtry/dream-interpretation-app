@@ -1,4 +1,5 @@
 import {
+  IonAlert,
   IonButton,
   IonButtons,
   IonContent,
@@ -14,14 +15,40 @@ import { useParams } from "react-router";
 
 import { arrowBackOutline, createOutline, trashOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { getDream } from "../../data/DB";
+import { RouteComponentProps, useLocation } from "react-router-dom";
+import { deleteDream, getDream } from "../../data/DB";
 import { Dream } from "../../types/Dream";
 
-function DreamDetails() {
+interface ConfirmDeleteAlertProps {
+  dream: Dream;
+  handleDelete: () => void;
+}
+function ConfirmDeleteAlert({ dream, handleDelete }: ConfirmDeleteAlertProps) {
+  return (
+    <>
+      <IonButton id="present-alert">
+        <IonIcon slot="icon-only" icon={trashOutline} />
+      </IonButton>
+      <IonAlert
+        trigger="present-alert"
+        header={`Delete ${dream.title}?`}
+        message="Are you sure you want to delete this dream? This action cannot be undone."
+        buttons={["Cancel", { text: "DELETE", handler: handleDelete }]}
+      />
+    </>
+  );
+}
+
+function DreamDetails({ history }: RouteComponentProps) {
   const location = useLocation();
   const { id } = useParams<{ id: string }>();
   const [dream, setDream] = useState<Dream | undefined>(undefined);
+
+  function handleDelete() {
+    deleteDream(id).then(() => {
+      history.push("/dreams");
+    });
+  }
 
   useEffect(() => {
     getDream(id).then((dream) => {
@@ -38,21 +65,7 @@ function DreamDetails() {
         <IonToolbar>
           <IonTitle>{dream.title}</IonTitle>
           <IonButtons slot="end">
-            <IonButton routerLink={`/dreams/${dream.id}/test`}>
-              <IonIcon slot="icon-only" icon={trashOutline} />
-            </IonButton>
-            <Link
-              to={{
-                pathname: `/dreams/${dream.id}/test`,
-                state: {
-                  dream: dream,
-                },
-              }}
-            >
-              <IonButton>
-                <IonIcon slot="icon-only" icon={trashOutline} />
-              </IonButton>
-            </Link>
+            <ConfirmDeleteAlert dream={dream} handleDelete={handleDelete} />
             <IonButton routerLink={`/dreams/${dream.id}/edit`}>
               <IonIcon slot="icon-only" icon={createOutline} />
             </IonButton>

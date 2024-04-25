@@ -1,7 +1,7 @@
 import { Dream, DreamReq, DreamUpdate } from "../types/Dream";
 
 import "firebase/firestore";
-import { QuerySnapshot, addDoc, collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { QuerySnapshot, addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { fetchFirestore } from "./Firestore";
 
 function snapshotToDreams(snapshot: QuerySnapshot): Dream[] {
@@ -49,7 +49,6 @@ async function getDream(id: string): Promise<Dream | undefined> {
       } as Dream;
     })
     .catch((error) => {
-      console.error("Error getting dream: ", error);
       return undefined;
     });
   return dream;
@@ -70,9 +69,19 @@ async function updateDream(dreamUpdate: DreamUpdate): Promise<string | undefined
   return undefined;
 }
 
+async function deleteDream(id: string): Promise<void> {
+  const firestore = fetchFirestore();
+  console.log(`Deleting dream: ${id} from Firestore ${firestore.app.options.projectId}`);
+
+  const dreamDoc = doc(firestore, "dreams", id);
+  deleteDoc(dreamDoc).then(() => {
+    console.log("Document deleted with ID: ", id);
+  });
+}
+
 async function getAllDreams(userId?: string): Promise<Dream[]> {
   const querySnapshot = await getDocs(collection(fetchFirestore(), "dreams"));
   return snapshotToDreams(querySnapshot);
 }
 
-export { addDream, getAllDreams, getDream, updateDream };
+export { addDream, deleteDream, getAllDreams, getDream, updateDream };
