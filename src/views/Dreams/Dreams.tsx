@@ -81,7 +81,7 @@ function MyDreams({ allDreams }: MyDreamsProps) {
 
   useEffect(() => {
     handleRefresh();
-  }, [location.key]);
+  }, [location.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleRefresh(event?: IonRefresherCustomEvent<RefresherEventDetail>) {
     getAllDreams().then((dr) => {
