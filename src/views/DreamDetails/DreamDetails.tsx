@@ -9,13 +9,14 @@ import {
   IonSpinner,
   IonTitle,
   IonToolbar,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import {} from "ionicons/icons";
 import { useParams } from "react-router";
 
 import { arrowBackOutline, createOutline, trashOutline } from "ionicons/icons";
-import { useEffect, useState } from "react";
-import { RouteComponentProps, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { RouteComponentProps } from "react-router-dom";
 import { deleteDream, getDream } from "../../data/DB";
 import { Dream } from "../../types/Dream";
 
@@ -51,7 +52,6 @@ function ConfirmDeleteAlert({ dream, handleDelete }: ConfirmDeleteAlertProps) {
 }
 
 function DreamDetails({ history }: RouteComponentProps) {
-  const location = useLocation();
   const { id } = useParams<{ id: string }>();
   const [dream, setDream] = useState<Dream | undefined>(undefined);
 
@@ -61,22 +61,25 @@ function DreamDetails({ history }: RouteComponentProps) {
     });
   }
 
-  useEffect(() => {
-    if (location.pathname.includes("view")) {
-      getDream(id)
-        .then((dream) => {
-          setDream(dream);
-        })
-        .catch((error) => {
-          console.error(error);
-          history.push("/dreams");
-        });
-    }
-  }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+  useIonViewWillEnter(() => {
+    getDream(id)
+      .then((dream) => {
+        setDream(dream);
+      })
+      .catch((error) => {
+        console.error(error);
+        history.push("/dreams");
+      });
+  });
 
   if (!dream) {
-    return <IonSpinner />;
+    return (
+      <IonPage>
+        <IonSpinner />
+      </IonPage>
+    );
   }
+
   return (
     <IonPage>
       <IonHeader>

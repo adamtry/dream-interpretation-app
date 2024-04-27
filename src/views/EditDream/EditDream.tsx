@@ -2,27 +2,35 @@ import { Dream, DreamUpdate } from "../../types/Dream";
 
 import { useForm } from "react-hook-form";
 
-import { IonSpinner } from "@ionic/react";
-import { useEffect, useState } from "react";
-import { RouteComponentProps, useLocation, useParams } from "react-router-dom";
+import { IonPage, IonSpinner, useIonViewWillEnter } from "@ionic/react";
+import { useState } from "react";
+import { RouteComponentProps, useParams } from "react-router-dom";
 import { getDream, updateDream } from "../../data/DB";
 import DreamForm from "../_components/DreamForm";
 
 interface EditDreamProps extends RouteComponentProps {}
 function EditDream({ history }: EditDreamProps) {
-  const location = useLocation();
   const form = useForm();
   const { id } = useParams<{ id: string }>();
   const [dream, setDream] = useState<Dream | undefined>(undefined);
 
-  useEffect(() => {
-    getDream(id).then((dream) => {
-      setDream(dream);
-    });
-  }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+  useIonViewWillEnter(() => {
+    getDream(id)
+      .then((dream) => {
+        setDream(dream);
+      })
+      .catch((error) => {
+        console.error(error);
+        history.push("/dreams");
+      });
+  });
 
   if (!dream) {
-    return <IonSpinner />;
+    return (
+      <IonPage>
+        <IonSpinner />
+      </IonPage>
+    );
   }
 
   function resetForm() {

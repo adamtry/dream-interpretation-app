@@ -10,6 +10,7 @@ import {
   IonTitle,
   IonToolbar,
   RefresherEventDetail,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import { Dream } from "../../types/Dream";
 
@@ -17,9 +18,9 @@ import { IonPage } from "@ionic/react";
 
 import { IonRefresherCustomEvent } from "@ionic/core";
 import { add } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Route, RouteComponentProps } from "react-router";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getAllDreams } from "../../data/DB";
 import AddDream from "../AddDream/AddDream";
 import DreamDetails from "../DreamDetails/DreamDetails";
@@ -32,7 +33,7 @@ export function MyDreamsPage({ match }: MyDreamsPageProps) {
   return (
     <IonPage>
       <IonRouterOutlet>
-        <Route exact path={match.url} render={(props) => <MyDreams {...props} />} />
+        <Route exact path={match.url} component={MyDreams} />
         <Route exact path={`${match.url}/edit/:id`} render={(props) => <EditDream {...props} />} />
         <Route exact path={`${match.url}/add`} render={(props) => <AddDream {...props} />} />
         <Route exact path={`${match.url}/view/:id`} render={(props) => <DreamDetails {...props} />} />
@@ -41,10 +42,8 @@ export function MyDreamsPage({ match }: MyDreamsPageProps) {
   );
 }
 
-function MyDreams({ match }: RouteComponentProps) {
-  const location = useLocation();
+function MyDreams() {
   const [dreams, setDreams] = useState<Dream[]>([]);
-  const [shownDreams, setShownDreams] = useState<Dream[]>([]);
   const [textFilter, setTextFilter] = useState<string>("");
 
   function filterDreams(searchFilter: string, dreams: Dream[]) {
@@ -59,25 +58,16 @@ function MyDreams({ match }: RouteComponentProps) {
       });
   }
 
-  useEffect(() => {
-    console.log("Filtering dreams");
-    const filteredDreams = filterDreams(textFilter, dreams);
-    setShownDreams(filteredDreams);
-  }, [textFilter, dreams]);
+  const shownDreams = useMemo(() => filterDreams(textFilter, dreams), [textFilter, dreams]);
 
-  useEffect(() => {
-    console.log("Location changed");
-    handleRefresh();
-  }, [location.key]); // eslint-disable-line react-hooks/exhaustive-deps
+  useIonViewWillEnter(() => {
+    refreshDreams();
+  });
 
-  async function handleRefresh(event?: IonRefresherCustomEvent<RefresherEventDetail>) {
-    if (window.location.pathname !== match.url) return;
+  async function refreshDreams(event?: IonRefresherCustomEvent<RefresherEventDetail>) {
     getAllDreams().then((dr) => {
-      const dreamRes = filterDreams(textFilter, dr);
-      setShownDreams(dreamRes);
-      setDreams(dreamRes);
+      setDreams(dr);
     });
-    (document.getElementById("dreamSearch") as HTMLIonSearchbarElement).value = "";
     event?.detail.complete();
   }
 
@@ -90,8 +80,8 @@ function MyDreams({ match }: RouteComponentProps) {
       </IonHeader>
       <SearchBar setSearchFilter={setTextFilter} />
       <IonContent>
-        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-          <IonRefresherContent></IonRefresherContent>
+        <IonRefresher slot="fixed" onIonRefresh={refreshDreams}>
+          <IonRefresherContent />
         </IonRefresher>
         {shownDreams.map((dream) => (
           <DreamCard {...dream} key={dream.id} />
