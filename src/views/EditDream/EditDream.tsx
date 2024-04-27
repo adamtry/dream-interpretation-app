@@ -19,7 +19,7 @@ function EditDream({ history }: EditDreamProps) {
     getDream(id).then((dream) => {
       setDream(dream);
     });
-  }, [location.pathname]);
+  }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!dream) {
     return <IonSpinner />;

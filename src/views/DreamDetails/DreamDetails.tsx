@@ -72,7 +72,7 @@ function DreamDetails({ history }: RouteComponentProps) {
           history.push("/dreams");
         });
     }
-  }, [location.pathname]);
+  }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!dream) {
     return <IonSpinner />;
