@@ -2,28 +2,35 @@ import { Dream, DreamUpdate } from "../../types/Dream";
 
 import { useForm } from "react-hook-form";
 
-import { IonSpinner } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { IonPage, IonSpinner, useIonViewWillEnter } from "@ionic/react";
+import { useState } from "react";
 import { RouteComponentProps, useParams } from "react-router-dom";
 import { getDream, updateDream } from "../../data/DB";
 import DreamForm from "../_components/DreamForm";
 
-interface EditDreamProps extends RouteComponentProps {
-  allDreams: Dream[];
-}
-function EditDream({ allDreams, history }: EditDreamProps) {
+interface EditDreamProps extends RouteComponentProps {}
+function EditDream({ history }: EditDreamProps) {
   const form = useForm();
   const { id } = useParams<{ id: string }>();
   const [dream, setDream] = useState<Dream | undefined>(undefined);
 
-  useEffect(() => {
-    getDream(id).then((dream) => {
-      setDream(dream);
-    });
-  }, [id]);
+  useIonViewWillEnter(() => {
+    getDream(id)
+      .then((dream) => {
+        setDream(dream);
+      })
+      .catch((error) => {
+        console.error(error);
+        history.push("/dreams");
+      });
+  });
 
   if (!dream) {
-    return <IonSpinner />;
+    return (
+      <IonPage>
+        <IonSpinner />
+      </IonPage>
+    );
   }
 
   function resetForm() {
@@ -52,15 +59,6 @@ function EditDream({ allDreams, history }: EditDreamProps) {
       .then((newDreamId) => {
         if (!newDreamId) return;
 
-        const updatedDream = {
-          id: dreamUpdate.id,
-          title: dreamUpdate.title || dream.title,
-          description: dreamUpdate.description || dream.description,
-          date: dreamUpdate.date || dream.date,
-        };
-
-        var newDreams = allDreams.map((d) => (d.id === updatedDream.id ? updatedDream : d));
-        newDreams.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         resetForm();
       })
       .catch((error) => {
@@ -77,7 +75,7 @@ function EditDream({ allDreams, history }: EditDreamProps) {
       formTitle="Edit Dream"
       submitAction={submitAction}
       presetValues={dream}
-      redirect={`/dreams/${dream.id}`}
+      redirect={`/dreams/view/${dream.id}`}
     />
   );
 }

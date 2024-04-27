@@ -19,16 +19,16 @@ import "@ionic/react/css/padding.css";
 import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
 
-import React from "react";
+import { StrictMode } from "react";
 import { App } from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
 function Root() {
   return (
-    <React.StrictMode>
+    <StrictMode>
       <App />
-    </React.StrictMode>
+    </StrictMode>
   );
 }
 root.render(<Root />);
@@ -39,6 +39,6 @@ root.render(<Root />);
 serviceWorkerRegistration.unregister();
 
 // If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
+// to log results (for example: reportWebVitals(cons ole.l og))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

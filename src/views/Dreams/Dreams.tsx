@@ -10,6 +10,7 @@ import {
   IonTitle,
   IonToolbar,
   RefresherEventDetail,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import { Dream } from "../../types/Dream";
 
@@ -17,9 +18,9 @@ import { IonPage } from "@ionic/react";
 
 import { IonRefresherCustomEvent } from "@ionic/core";
 import { add } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Route, RouteComponentProps } from "react-router";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getAllDreams } from "../../data/DB";
 import AddDream from "../AddDream/AddDream";
 import DreamDetails from "../DreamDetails/DreamDetails";
@@ -27,39 +28,22 @@ import EditDream from "../EditDream/EditDream";
 import { DreamCard } from "./components/DreamCard";
 import { SearchBar } from "./components/SearchBar";
 
-interface MyDreamsPageProps extends RouteComponentProps {
-  allDreams: Dream[];
-  addDreamProp: (dream: Dream) => void;
-}
-export function MyDreamsPage({ allDreams, addDreamProp, match }: MyDreamsPageProps) {
+interface MyDreamsPageProps extends RouteComponentProps {}
+export function MyDreamsPage({ match }: MyDreamsPageProps) {
   return (
     <IonPage>
       <IonRouterOutlet>
-        <Route exact path={match.url} render={() => <MyDreams allDreams={allDreams} />} />
-        <Route exact path={`${match.url}/:id`} component={DreamDetails} />
-        <Route
-          exact
-          path={`${match.url}/:id/edit`}
-          render={(props) => <EditDream allDreams={allDreams} {...props} />}
-        />
-        <Route
-          exact
-          path={`${match.url}/add`}
-          render={(props) => <AddDream {...props} addDreamCallback={addDreamProp} />}
-        />
+        <Route exact path={match.url} component={MyDreams} />
+        <Route exact path={`${match.url}/edit/:id`} render={(props) => <EditDream {...props} />} />
+        <Route exact path={`${match.url}/add`} render={(props) => <AddDream {...props} />} />
+        <Route exact path={`${match.url}/view/:id`} render={(props) => <DreamDetails {...props} />} />
       </IonRouterOutlet>
     </IonPage>
   );
 }
 
-interface MyDreamsProps {
-  allDreams: Dream[];
-}
-
-function MyDreams({ allDreams }: MyDreamsProps) {
-  const location = useLocation();
-  const [dreams, setDreams] = useState<Dream[]>(allDreams);
-  const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
+function MyDreams() {
+  const [dreams, setDreams] = useState<Dream[]>([]);
   const [textFilter, setTextFilter] = useState<string>("");
 
   function filterDreams(searchFilter: string, dreams: Dream[]) {
@@ -74,22 +58,16 @@ function MyDreams({ allDreams }: MyDreamsProps) {
       });
   }
 
-  useEffect(() => {
-    const filteredDreams = filterDreams(textFilter, dreams);
-    setShownDreams(filteredDreams);
-  }, [textFilter, dreams]);
+  const shownDreams = useMemo(() => filterDreams(textFilter, dreams), [textFilter, dreams]);
 
-  useEffect(() => {
-    handleRefresh();
-  }, [location.key]); // eslint-disable-line react-hooks/exhaustive-deps
+  useIonViewWillEnter(() => {
+    refreshDreams();
+  });
 
-  async function handleRefresh(event?: IonRefresherCustomEvent<RefresherEventDetail>) {
+  async function refreshDreams(event?: IonRefresherCustomEvent<RefresherEventDetail>) {
     getAllDreams().then((dr) => {
-      const dreamRes = filterDreams(textFilter, dr);
-      setShownDreams(dreamRes);
-      setDreams(dreamRes);
+      setDreams(dr);
     });
-    (document.getElementById("dreamSearch") as HTMLIonSearchbarElement).value = "";
     event?.detail.complete();
   }
 
@@ -102,8 +80,8 @@ function MyDreams({ allDreams }: MyDreamsProps) {
       </IonHeader>
       <SearchBar setSearchFilter={setTextFilter} />
       <IonContent>
-        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-          <IonRefresherContent></IonRefresherContent>
+        <IonRefresher slot="fixed" onIonRefresh={refreshDreams}>
+          <IonRefresherContent />
         </IonRefresher>
         {shownDreams.map((dream) => (
           <DreamCard {...dream} key={dream.id} />

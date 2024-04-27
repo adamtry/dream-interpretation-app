@@ -9,13 +9,14 @@ import {
   IonSpinner,
   IonTitle,
   IonToolbar,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import {} from "ionicons/icons";
 import { useParams } from "react-router";
 
 import { arrowBackOutline, createOutline, trashOutline } from "ionicons/icons";
-import { useEffect, useState } from "react";
-import { RouteComponentProps, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { RouteComponentProps } from "react-router-dom";
 import { deleteDream, getDream } from "../../data/DB";
 import { Dream } from "../../types/Dream";
 
@@ -51,7 +52,6 @@ function ConfirmDeleteAlert({ dream, handleDelete }: ConfirmDeleteAlertProps) {
 }
 
 function DreamDetails({ history }: RouteComponentProps) {
-  const location = useLocation();
   const { id } = useParams<{ id: string }>();
   const [dream, setDream] = useState<Dream | undefined>(undefined);
 
@@ -61,15 +61,25 @@ function DreamDetails({ history }: RouteComponentProps) {
     });
   }
 
-  useEffect(() => {
-    getDream(id).then((dream) => {
-      if (dream) setDream(dream);
-    });
-  }, [id, location.key]);
+  useIonViewWillEnter(() => {
+    getDream(id)
+      .then((dream) => {
+        setDream(dream);
+      })
+      .catch((error) => {
+        console.error(error);
+        history.push("/dreams");
+      });
+  });
 
   if (!dream) {
-    return <IonSpinner />;
+    return (
+      <IonPage>
+        <IonSpinner />
+      </IonPage>
+    );
   }
+
   return (
     <IonPage>
       <IonHeader>
@@ -77,7 +87,7 @@ function DreamDetails({ history }: RouteComponentProps) {
           <IonTitle>{dream.title}</IonTitle>
           <IonButtons slot="end">
             <ConfirmDeleteAlert dream={dream} handleDelete={handleDelete} />
-            <IonButton routerLink={`/dreams/${dream.id}/edit`}>
+            <IonButton routerLink={`/dreams/edit/${dream.id}`}>
               <IonIcon slot="icon-only" icon={createOutline} />
             </IonButton>
             <IonButton routerLink="/dreams">

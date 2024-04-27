@@ -19,7 +19,7 @@ function snapshotToDreams(snapshot: QuerySnapshot): Dream[] {
   return dreamList;
 }
 
-async function addDream(dreamReq: DreamReq, callback: (dream: Dream) => void) {
+async function addDream(dreamReq: DreamReq) {
   const firestore = fetchFirestore();
   console.log(
     `Adding dream: ${dreamReq.title} ${dreamReq.description} ${dreamReq.date} to Firestore ${firestore.app.options.projectId}`,
@@ -27,38 +27,31 @@ async function addDream(dreamReq: DreamReq, callback: (dream: Dream) => void) {
 
   await addDoc(collection(firestore, "dreams"), dreamReq).then((docRef) => {
     console.log("Document written with ID: ", docRef.id);
-    const dream = {
-      id: docRef.id,
-      ...dreamReq,
-    };
-    callback(dream);
   });
 }
 
 async function getDream(id: string): Promise<Dream | undefined> {
+  console.log(`Fetch dream with id: ${id}`);
   const firestore = fetchFirestore();
   const dreamDoc = doc(firestore, "dreams", id);
-  const dream = await getDoc(dreamDoc)
-    .then((doc) => {
-      const data = doc.data() as Dream;
-      return {
-        id: doc.id,
-        title: data.title,
-        description: data.description,
-        date: data.date,
-      } as Dream;
-    })
-    .catch((error) => {
-      return undefined;
-    });
+  const dream = await getDoc(dreamDoc).then((doc) => {
+    if (!doc.exists()) {
+      throw new Error(`No dream with id ${id}`);
+    }
+    const data = doc.data() as Dream;
+    return {
+      id: doc.id,
+      title: data.title,
+      description: data.description,
+      date: data.date,
+    } as Dream;
+  });
   return dream;
 }
 
 async function updateDream(dreamUpdate: DreamUpdate): Promise<string | undefined> {
   const firestore = fetchFirestore();
-  console.log(
-    `Updating dream: ${dreamUpdate.title} ${dreamUpdate.description} ${dreamUpdate.date} in Firestore ${firestore.app.options.projectId}`,
-  );
+  console.log(`Updating dream ${dreamUpdate.id}: ${dreamUpdate.title} ${dreamUpdate.description} ${dreamUpdate.date}`);
 
   const dreamDoc = doc(firestore, "dreams", dreamUpdate.id);
 
@@ -71,15 +64,16 @@ async function updateDream(dreamUpdate: DreamUpdate): Promise<string | undefined
 
 async function deleteDream(id: string): Promise<void> {
   const firestore = fetchFirestore();
-  console.log(`Deleting dream: ${id} from Firestore ${firestore.app.options.projectId}`);
+  console.log(`Deleting dream: ${id}`);
 
   const dreamDoc = doc(firestore, "dreams", id);
   deleteDoc(dreamDoc).then(() => {
-    console.log("Document deleted with ID: ", id);
+    console.log("Dream deleted with ID: ", id);
   });
 }
 
 async function getAllDreams(userId?: string): Promise<Dream[]> {
+  console.log("Fetching all dreams from DB");
   const querySnapshot = await getDocs(collection(fetchFirestore(), "dreams"));
   return snapshotToDreams(querySnapshot);
 }
