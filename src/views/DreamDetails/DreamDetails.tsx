@@ -62,10 +62,17 @@ function DreamDetails({ history }: RouteComponentProps) {
   }
 
   useEffect(() => {
-    getDream(id).then((dream) => {
-      if (dream) setDream(dream);
-    });
-  }, [id, location.key]);
+    if (location.pathname.includes("view")) {
+      getDream(id)
+        .then((dream) => {
+          setDream(dream);
+        })
+        .catch((error) => {
+          console.error(error);
+          history.push("/dreams");
+        });
+    }
+  }, [location.pathname]);
 
   if (!dream) {
     return <IonSpinner />;
@@ -77,7 +84,7 @@ function DreamDetails({ history }: RouteComponentProps) {
           <IonTitle>{dream.title}</IonTitle>
           <IonButtons slot="end">
             <ConfirmDeleteAlert dream={dream} handleDelete={handleDelete} />
-            <IonButton routerLink={`/dreams/${dream.id}/edit`}>
+            <IonButton routerLink={`/dreams/edit/${dream.id}`}>
               <IonIcon slot="icon-only" icon={createOutline} />
             </IonButton>
             <IonButton routerLink="/dreams">

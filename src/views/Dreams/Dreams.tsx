@@ -27,39 +27,24 @@ import EditDream from "../EditDream/EditDream";
 import { DreamCard } from "./components/DreamCard";
 import { SearchBar } from "./components/SearchBar";
 
-interface MyDreamsPageProps extends RouteComponentProps {
-  allDreams: Dream[];
-  addDreamProp: (dream: Dream) => void;
-}
-export function MyDreamsPage({ allDreams, addDreamProp, match }: MyDreamsPageProps) {
+interface MyDreamsPageProps extends RouteComponentProps {}
+export function MyDreamsPage({ match }: MyDreamsPageProps) {
   return (
     <IonPage>
       <IonRouterOutlet>
-        <Route exact path={match.url} render={() => <MyDreams allDreams={allDreams} />} />
-        <Route exact path={`${match.url}/:id`} component={DreamDetails} />
-        <Route
-          exact
-          path={`${match.url}/:id/edit`}
-          render={(props) => <EditDream allDreams={allDreams} {...props} />}
-        />
-        <Route
-          exact
-          path={`${match.url}/add`}
-          render={(props) => <AddDream {...props} addDreamCallback={addDreamProp} />}
-        />
+        <Route exact path={match.url} render={(props) => <MyDreams {...props} />} />
+        <Route exact path={`${match.url}/edit/:id`} render={(props) => <EditDream {...props} />} />
+        <Route exact path={`${match.url}/add`} render={(props) => <AddDream {...props} />} />
+        <Route exact path={`${match.url}/view/:id`} render={(props) => <DreamDetails {...props} />} />
       </IonRouterOutlet>
     </IonPage>
   );
 }
 
-interface MyDreamsProps {
-  allDreams: Dream[];
-}
-
-function MyDreams({ allDreams }: MyDreamsProps) {
+function MyDreams({ match }: RouteComponentProps) {
   const location = useLocation();
-  const [dreams, setDreams] = useState<Dream[]>(allDreams);
-  const [shownDreams, setShownDreams] = useState<Dream[]>(allDreams);
+  const [dreams, setDreams] = useState<Dream[]>([]);
+  const [shownDreams, setShownDreams] = useState<Dream[]>([]);
   const [textFilter, setTextFilter] = useState<string>("");
 
   function filterDreams(searchFilter: string, dreams: Dream[]) {
@@ -75,15 +60,18 @@ function MyDreams({ allDreams }: MyDreamsProps) {
   }
 
   useEffect(() => {
+    console.log("Filtering dreams");
     const filteredDreams = filterDreams(textFilter, dreams);
     setShownDreams(filteredDreams);
   }, [textFilter, dreams]);
 
   useEffect(() => {
+    console.log("Location changed");
     handleRefresh();
   }, [location.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleRefresh(event?: IonRefresherCustomEvent<RefresherEventDetail>) {
+    if (window.location.pathname !== match.url) return;
     getAllDreams().then((dr) => {
       const dreamRes = filterDreams(textFilter, dr);
       setShownDreams(dreamRes);

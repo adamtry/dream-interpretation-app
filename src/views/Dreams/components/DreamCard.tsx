@@ -4,7 +4,7 @@ import { Dream } from "../../../types/Dream";
 
 export function DreamCard(dream: Dream) {
   var formattedDate = new Date(dream.date).toLocaleDateString();
-  const linkUrl = `/dreams/${dream.id}`;
+  const linkUrl = `/dreams/view/${dream.id}`;
   return (
     <Link
       to={{
