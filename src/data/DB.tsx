@@ -1,8 +1,21 @@
 import { Dream, DreamReq, DreamUpdate } from "../types/Dream";
 
 import "firebase/firestore";
-import { QuerySnapshot, addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
-import { fetchFirestore } from "./Firestore";
+import {
+  QuerySnapshot,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  updateDoc,
+} from "firebase/firestore";
+import { fetchFirebaseApp } from "./Firestore";
+
+const firebase = fetchFirebaseApp();
+const firestore = getFirestore(firebase);
 
 function snapshotToDreams(snapshot: QuerySnapshot): Dream[] {
   const dreamList: Dream[] = [];
@@ -20,7 +33,6 @@ function snapshotToDreams(snapshot: QuerySnapshot): Dream[] {
 }
 
 async function addDream(dreamReq: DreamReq) {
-  const firestore = fetchFirestore();
   console.log(
     `Adding dream: ${dreamReq.title} ${dreamReq.description} ${dreamReq.date} to Firestore ${firestore.app.options.projectId}`,
   );
@@ -32,7 +44,6 @@ async function addDream(dreamReq: DreamReq) {
 
 async function getDream(id: string): Promise<Dream | undefined> {
   console.log(`Fetch dream with id: ${id}`);
-  const firestore = fetchFirestore();
   const dreamDoc = doc(firestore, "dreams", id);
   const dream = await getDoc(dreamDoc).then((doc) => {
     if (!doc.exists()) {
@@ -50,7 +61,6 @@ async function getDream(id: string): Promise<Dream | undefined> {
 }
 
 async function updateDream(dreamUpdate: DreamUpdate): Promise<string | undefined> {
-  const firestore = fetchFirestore();
   console.log(`Updating dream ${dreamUpdate.id}: ${dreamUpdate.title} ${dreamUpdate.description} ${dreamUpdate.date}`);
 
   const dreamDoc = doc(firestore, "dreams", dreamUpdate.id);
@@ -63,7 +73,6 @@ async function updateDream(dreamUpdate: DreamUpdate): Promise<string | undefined
 }
 
 async function deleteDream(id: string): Promise<void> {
-  const firestore = fetchFirestore();
   console.log(`Deleting dream: ${id}`);
 
   const dreamDoc = doc(firestore, "dreams", id);
@@ -74,7 +83,7 @@ async function deleteDream(id: string): Promise<void> {
 
 async function getAllDreams(userId?: string): Promise<Dream[]> {
   console.log("Fetching all dreams from DB");
-  const querySnapshot = await getDocs(collection(fetchFirestore(), "dreams"));
+  const querySnapshot = await getDocs(collection(firestore, "dreams"));
   return snapshotToDreams(querySnapshot);
 }
 

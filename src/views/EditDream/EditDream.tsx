@@ -15,6 +15,7 @@ function EditDream({ history }: EditDreamProps) {
   const [dream, setDream] = useState<Dream | undefined>(undefined);
 
   useIonViewWillEnter(() => {
+    if (!document.location.pathname.includes("/edit/")) return;
     getDream(id)
       .then((dream) => {
         setDream(dream);

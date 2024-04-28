@@ -62,6 +62,7 @@ function DreamDetails({ history }: RouteComponentProps) {
   }
 
   useIonViewWillEnter(() => {
+    if (!document.location.pathname.includes("/view/")) return;
     getDream(id)
       .then((dream) => {
         setDream(dream);

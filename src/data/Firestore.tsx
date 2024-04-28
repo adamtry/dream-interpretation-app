@@ -1,7 +1,6 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { Firestore, getFirestore } from "firebase/firestore";
 
-function fetchFirebaseApp(): FirebaseApp {
+export function fetchFirebaseApp(): FirebaseApp {
   const firebaseOptions = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
     authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -12,10 +11,4 @@ function fetchFirebaseApp(): FirebaseApp {
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
   };
   return initializeApp(firebaseOptions);
-}
-
-export function fetchFirestore(): Firestore {
-  const APP = fetchFirebaseApp();
-  const firestore = getFirestore(APP);
-  return firestore;
 }
