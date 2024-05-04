@@ -1,5 +1,4 @@
 import {
-  IonAlert,
   IonButton,
   IonButtons,
   IonContent,
@@ -14,42 +13,12 @@ import {
 import {} from "ionicons/icons";
 import { useParams } from "react-router";
 
-import { arrowBackOutline, createOutline, trashOutline } from "ionicons/icons";
+import { arrowBackOutline, createOutline } from "ionicons/icons";
 import { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { deleteDream, getDream } from "../../data/DB";
 import { Dream } from "../../types/Dream";
-
-interface ConfirmDeleteAlertProps {
-  dream: Dream;
-  handleDelete: () => void;
-}
-function ConfirmDeleteAlert({ dream, handleDelete }: ConfirmDeleteAlertProps) {
-  const [showAlert, setShowAlert] = useState(false);
-
-  function onDeletePressed() {
-    setShowAlert(false);
-    handleDelete();
-  }
-
-  return (
-    <>
-      <IonButton onClick={() => setShowAlert(true)}>
-        <IonIcon slot="icon-only" icon={trashOutline} />
-      </IonButton>
-      <IonAlert
-        isOpen={showAlert}
-        onWillDismiss={() => setShowAlert(false)}
-        header={`Delete ${dream.title}?`}
-        message="Are you sure you want to delete this dream? This action cannot be undone."
-        buttons={[
-          { text: "CANCEL", handler: () => setShowAlert(false) },
-          { text: "DELETE", handler: onDeletePressed },
-        ]}
-      />
-    </>
-  );
-}
+import { ConfirmDeleteAlert } from "./components/ConfirmDeleteAlert";
 
 function DreamDetails({ history }: RouteComponentProps) {
   const { id } = useParams<{ id: string }>();
@@ -63,17 +32,19 @@ function DreamDetails({ history }: RouteComponentProps) {
 
   useIonViewWillEnter(() => {
     if (!document.location.pathname.includes("/view/")) return;
-    getDream(id)
-      .then((dream) => {
-        setDream(dream);
-      })
-      .catch((error) => {
-        console.error(error);
-        history.push("/dreams");
-      });
+    if (id) {
+      getDream(id)
+        .then((dream) => {
+          setDream(dream);
+        })
+        .catch((error) => {
+          console.error(error);
+          history.push("/dreams");
+        });
+    }
   });
 
-  if (!dream) {
+  if (!id || !dream) {
     return (
       <IonPage>
         <IonSpinner />
