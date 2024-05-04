@@ -6,7 +6,6 @@ import {
   IonIcon,
   IonRefresher,
   IonRefresherContent,
-  IonRouterOutlet,
   IonTitle,
   IonToolbar,
   RefresherEventDetail,
@@ -19,29 +18,12 @@ import { IonPage } from "@ionic/react";
 import { IonRefresherCustomEvent } from "@ionic/core";
 import { add } from "ionicons/icons";
 import { useMemo, useState } from "react";
-import { Route } from "react-router";
 import { Link } from "react-router-dom";
 import { getAllDreams } from "../../data/DB";
-import AddDream from "../AddDream/AddDream";
-import DreamDetails from "../DreamDetails/DreamDetails";
-import EditDream from "../EditDream/EditDream";
 import { DreamCard } from "./components/DreamCard";
 import { SearchBar } from "./components/SearchBar";
 
-export function MyDreamsPage() {
-  return (
-    <IonPage>
-      <IonRouterOutlet>
-        <Route exact path="/dreams" component={MyDreams} />
-        <Route exact path="/dreams/edit/:id" render={(props) => <EditDream {...props} />} />
-        <Route exact path="/dreams/add" render={(props) => <AddDream {...props} />} />
-        <Route exact path="/dreams/view/:id" render={(props) => <DreamDetails {...props} />} />
-      </IonRouterOutlet>
-    </IonPage>
-  );
-}
-
-function MyDreams() {
+export function MyDreams() {
   const [dreams, setDreams] = useState<Dream[]>([]);
   const [textFilter, setTextFilter] = useState<string>("");
 
