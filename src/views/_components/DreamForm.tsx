@@ -1,4 +1,5 @@
 import {
+  IonBackButton,
   IonButton,
   IonButtons,
   IonContent,
@@ -21,10 +22,9 @@ interface DreamFormProps {
   form: UseFormReturn<any>;
   formTitle: string;
   submitAction: (dream: DreamReq | DreamUpdate) => Promise<void>;
-  redirect: string;
   presetValues?: DreamReq;
 }
-function DreamForm({ form, formTitle, presetValues, submitAction, redirect }: DreamFormProps) {
+function DreamForm({ form, formTitle, presetValues, submitAction }: DreamFormProps) {
   const { register, handleSubmit, reset } = form;
 
   function resetForm() {
@@ -55,9 +55,9 @@ function DreamForm({ form, formTitle, presetValues, submitAction, redirect }: Dr
         <IonToolbar>
           <IonTitle>{formTitle}</IonTitle>
           <IonButtons slot="end">
-            <IonButton routerLink={redirect}>
+            <IonBackButton>
               <IonIcon slot="icon-only" icon={closeOutline} />
-            </IonButton>
+            </IonBackButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>

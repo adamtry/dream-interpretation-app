@@ -70,15 +70,7 @@ function EditDream({ history }: EditDreamProps) {
       });
   }
 
-  return (
-    <DreamForm
-      form={form}
-      formTitle="Edit Dream"
-      submitAction={submitAction}
-      presetValues={dream}
-      redirect={`/dreams/view/${dream.id}`}
-    />
-  );
+  return <DreamForm form={form} formTitle="Edit Dream" submitAction={submitAction} presetValues={dream} />;
 }
 
 export default EditDream;

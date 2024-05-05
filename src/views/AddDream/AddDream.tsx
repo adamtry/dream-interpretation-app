@@ -36,7 +36,7 @@ function AddDream({ history }: AddDreamProps) {
       });
   }
 
-  return <DreamForm form={form} formTitle="Add Dream" submitAction={submitAction} redirect="/dreams" />;
+  return <DreamForm form={form} formTitle="Add Dream" submitAction={submitAction} />;
 }
 
 export default AddDream;
