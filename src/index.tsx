@@ -19,10 +19,15 @@ import "@ionic/react/css/padding.css";
 import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
 
+import "@ionic/react/css/palettes/dark.always.css";
+
+import { setupIonicReact } from "@ionic/react";
 import { StrictMode } from "react";
 import { App } from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+
+setupIonicReact({ mode: "md" });
 
 function Root() {
   return (
