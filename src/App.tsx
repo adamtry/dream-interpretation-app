@@ -1,4 +1,4 @@
-import { IonApp, IonContent, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton } from "@ionic/react";
+import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { cogOutline, list } from "ionicons/icons";
 import { Route } from "react-router-dom";
@@ -12,25 +12,25 @@ function App() {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonContent>
+        <IonTabs>
           <IonRouterOutlet>
             <Route exact path="/dreams" component={MyDreams} />
             <Route exact path="/dreams/edit/:id" render={(props) => <EditDream {...props} />} />
             <Route exact path="/dreams/add" render={(props) => <AddDream {...props} />} />
             <Route exact path="/dreams/view/:id" render={(props) => <DreamDetails {...props} />} />
-            <Route exact path="/settings" render={() => <Settings />} />
+            <Route exact path="/settings" component={Settings} />
           </IonRouterOutlet>
-        </IonContent>
-        <IonTabBar slot={"bottom"}>
-          <IonTabButton tab="dreams" href="/dreams">
-            <IonIcon icon={list} />
-            Dreams
-          </IonTabButton>
-          <IonTabButton tab="settings" href="/settings">
-            <IonIcon icon={cogOutline} />
-            Settings
-          </IonTabButton>
-        </IonTabBar>
+          <IonTabBar slot={"bottom"}>
+            <IonTabButton tab="dreams" href="/dreams">
+              <IonIcon icon={list} />
+              Dreams
+            </IonTabButton>
+            <IonTabButton tab="settings" href="/settings">
+              <IonIcon icon={cogOutline} />
+              Settings
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
       </IonReactRouter>
     </IonApp>
   );

@@ -29,7 +29,7 @@
   // "features": {},
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3000]
+  "forwardPorts": [8100]
 
   // "initializeCommand": "npm install"
 

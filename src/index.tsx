@@ -1,6 +1,3 @@
-import ReactDOM from "react-dom/client";
-import "./styles/index.css";
-
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -23,7 +20,9 @@ import { setupIonicReact } from "@ionic/react";
 import { StrictMode } from "react";
 import { App } from "./App";
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+import { createRoot } from "react-dom/client";
+
+const root = createRoot(document.getElementById("root") as HTMLElement);
 
 setupIonicReact({ mode: "md" });
 
@@ -34,4 +33,5 @@ function Root() {
     </StrictMode>
   );
 }
+
 root.render(<Root />);
