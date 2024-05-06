@@ -1,7 +1,7 @@
 import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { cogOutline, list } from "ionicons/icons";
-import { Route } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import AddDream from "./views/AddDream/AddDream";
 import DreamDetails from "./views/DreamDetails/DreamDetails";
 import { MyDreams } from "./views/Dreams/Dreams";
@@ -19,6 +19,7 @@ function App() {
             <Route exact path="/dreams/add" render={(props) => <AddDream {...props} />} />
             <Route exact path="/dreams/view/:id" render={(props) => <DreamDetails {...props} />} />
             <Route exact path="/settings" component={Settings} />
+            <Redirect exact from="/" to="/dreams" />
           </IonRouterOutlet>
           <IonTabBar slot={"bottom"}>
             <IonTabButton tab="dreams" href="/dreams">
