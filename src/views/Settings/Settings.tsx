@@ -1,17 +1,6 @@
-import {
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
+import { IonContent, IonHeader, IonList, IonListHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 
-import { download } from "ionicons/icons";
+import ExportDreams from "./components/ExportDreams";
 
 function Settings() {
   return (
@@ -21,13 +10,10 @@ function Settings() {
           <IonTitle>Settings</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
+      <IonContent className="ion-padding">
         <IonListHeader>Data Management</IonListHeader>
         <IonList inset={true}>
-          <IonItem>
-            <IonIcon aria-hidden="true" icon={download} slot="start" />
-            <IonLabel>Export Dreams</IonLabel>
-          </IonItem>
+          <ExportDreams />
         </IonList>
       </IonContent>
     </IonPage>
