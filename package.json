@@ -31,8 +31,9 @@
     "firebase": "^10.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^5.0.1",
-    "react-hook-form": "^7.51.2"
+    "react-hook-form": "^7.51.4",
+    "react-phone-number-input": "^3.4.1",
+    "react-router-dom": "^5.0.1"
   },
   "eslintConfig": {
     "extends": [
@@ -53,10 +54,10 @@
     "generate-icons": "^0.1.10",
     "prettier": "^3.2.5",
     "prettier-eslint": "^16.3.0",
+    "typescript": "^5.2.2",
     "vite": "^5.2.11",
     "vite-plugin-pwa": "^0.20.0",
     "vite-plugin-svgr": "^4.2.0",
-    "vite-tsconfig-paths": "^4.3.2",
-    "typescript": "^5.2.2"
+    "vite-tsconfig-paths": "^4.3.2"
   }
 }
