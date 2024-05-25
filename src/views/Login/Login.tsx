@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { fetchFirebaseApp } from "../../data/Firestore";
 
 declare global {
   interface Window {
@@ -28,7 +27,6 @@ declare global {
 export function Login() {
   const [flowState, setFlowState] = useState<"setNumber" | "confirmCode">("setNumber");
   const [value, setValue] = useState("+447519203326" as E164Number);
-  var app = fetchFirebaseApp();
   const auth = getAuth();
   auth.useDeviceLanguage();
 

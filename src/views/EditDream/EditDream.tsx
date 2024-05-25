@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { IonPage, IonSpinner, useIonViewWillEnter } from "@ionic/react";
 import { useState } from "react";
 import { RouteComponentProps, useParams } from "react-router-dom";
-import { getDream, updateDream } from "../../data/DB";
+import { getDream, updateDream } from "../../data/DreamflowApi";
 import DreamForm from "../_components/DreamForm";
 
 interface EditDreamProps extends RouteComponentProps {}

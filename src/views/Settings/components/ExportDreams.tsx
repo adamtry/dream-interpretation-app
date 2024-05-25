@@ -1,6 +1,6 @@
 import { IonIcon, IonItem, IonLabel } from "@ionic/react";
 import { download } from "ionicons/icons";
-import { getAllDreams } from "../../../data/DB";
+import { getAllDreams } from "../../../data/DreamflowApi";
 
 function ExportDreams() {
   function exportDreamsToCSV() {

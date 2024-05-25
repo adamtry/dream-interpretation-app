@@ -21,10 +21,13 @@ import { StrictMode } from "react";
 import { App } from "./App";
 
 import { createRoot } from "react-dom/client";
+import { fetchFirebaseApp } from "./data/Firestore";
 
 const root = createRoot(document.getElementById("root") as HTMLElement);
 
 setupIonicReact({ mode: "md" });
+
+const firebase = fetchFirebaseApp();
 
 function Root() {
   return (

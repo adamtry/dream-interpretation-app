@@ -19,7 +19,7 @@ import { IonRefresherCustomEvent } from "@ionic/core";
 import { add } from "ionicons/icons";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllDreams } from "../../data/DB";
+import { getAllDreams } from "../../data/DreamflowApi";
 import { DreamCard } from "./components/DreamCard";
 import { SearchBar } from "./components/SearchBar";
 

@@ -16,7 +16,7 @@ import { useParams } from "react-router";
 import { arrowBackOutline, createOutline } from "ionicons/icons";
 import { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { deleteDream, getDream } from "../../data/DB";
+import { deleteDream, getDream } from "../../data/DreamflowApi";
 import { Dream } from "../../types/Dream";
 import { ConfirmDeleteAlert } from "./components/ConfirmDeleteAlert";
 
