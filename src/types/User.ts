@@ -1,6 +1,6 @@
-export interface User {
+export interface DreamUser {
   id: string;
   name: string;
 }
 
-export interface UserReq extends Omit<User, "id"> {}
+export interface UserReq extends Omit<DreamUser, "id"> {}

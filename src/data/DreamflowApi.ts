@@ -1,5 +1,6 @@
 import { User, getAuth } from "firebase/auth";
 import { Dream, DreamReq, DreamUpdate } from "../types/Dream";
+import { DreamUser } from "../types/User";
 
 
 const DREAMFLOW_API_URL = import.meta.env.VITE_DREAMFLOW_API_URL;
@@ -84,4 +85,42 @@ async function getAllDreams(): Promise<Dream[]> {
   return dreamData;
 }
 
-export { addDream, deleteDream, getAllDreams, getDream, updateDream };
+async function getDreamUser(): Promise<DreamUser> {
+  console.log("Fetching user");
+  const response = await fetch(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to get user");
+  }
+
+  return response.json() as Promise<DreamUser>;
+}
+
+
+async function tryCreateDreamUser() {
+  const userDb = await getDreamUser().catch(() => undefined);
+  if (userDb?.id) {
+    console.log(`User ${userDb.id} already exists`);
+    return;
+  }
+  
+  console.log("Creating user");
+  const user = fetchUser();
+  const response = await fetch(`${DREAMFLOW_API_URL}/users/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: user.uid, name: "First Last" }),
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to create user");
+  }
+
+}
+
+export { addDream, deleteDream, getAllDreams, getDream, tryCreateDreamUser, updateDream };
+
