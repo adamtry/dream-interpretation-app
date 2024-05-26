@@ -1,4 +1,4 @@
-import { addDream } from "../../data/DB";
+import { addDream } from "../../data/DreamflowApi";
 import { DreamReq } from "../../types/Dream";
 
 import { useForm } from "react-hook-form";
