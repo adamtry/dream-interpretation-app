@@ -1,13 +1,21 @@
+import { User, getAuth } from "firebase/auth";
 import { Dream, DreamReq, DreamUpdate } from "../types/Dream";
 
 
-const USER_ID = "540e507a-ea64-4382-8ee0-53a47a4ecc9f";
 const DREAMFLOW_API_URL = import.meta.env.VITE_DREAMFLOW_API_URL;
+
+function fetchUser(): User {
+  const user = getAuth().currentUser
+  if (!user) {
+    throw new Error("User not logged in");
+  }
+  return user;
+}
+
 
 async function addDream(dreamReq: DreamReq) {
   console.log(`Adding dream: ${dreamReq.title} ${dreamReq.description} ${dreamReq.date} to Firestore`);
-
-  await fetch(`${DREAMFLOW_API_URL}/users/${USER_ID}/dreams`, {
+  await fetch(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -61,11 +69,10 @@ async function deleteDream(id: string): Promise<void> {
   }
 }
 
-async function getAllDreams(userId?: string): Promise<Dream[]> {
-  userId = userId || USER_ID;
-  console.log(`Fetching all dreams for user ${userId}`);
+async function getAllDreams(): Promise<Dream[]> {
+  console.log(`Fetching all dreams`);
 
-  const response = await fetch(`${DREAMFLOW_API_URL}/users/${userId}/dreams`, {
+  const response = await fetch(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`, {
     method: "GET",
   });
 
