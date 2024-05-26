@@ -11,6 +11,7 @@ import {
   useIonViewWillLeave,
 } from "@ionic/react";
 import { ConfirmationResult, RecaptchaVerifier, getAuth, signInWithPhoneNumber } from "firebase/auth";
+import type { E164Number } from "libphonenumber-js";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
@@ -106,7 +107,7 @@ export function Login() {
           <form onSubmit={handleSubmit(onSubmitPhoneNumber)}>
             <PhoneInput
               placeholder="Enter phone number"
-              value={value}
+              value={value as E164Number}
               /* @ts-ignore */
               onChange={setValue}
               {...register("phoneNumber", { required: true })}
