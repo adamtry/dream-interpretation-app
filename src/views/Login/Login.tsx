@@ -11,11 +11,11 @@ import {
   useIonViewWillLeave,
 } from "@ionic/react";
 import { ConfirmationResult, RecaptchaVerifier, getAuth, signInWithPhoneNumber } from "firebase/auth";
-import { E164Number } from "libphonenumber-js";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { tryCreateDreamUser } from "../../data/DreamflowApi";
 
 declare global {
   interface Window {
@@ -26,7 +26,7 @@ declare global {
 
 export function Login() {
   const [flowState, setFlowState] = useState<"setNumber" | "confirmCode">("setNumber");
-  const [value, setValue] = useState("+447519203326" as E164Number);
+  const [value, setValue] = useState(import.meta.env.VITE_TEST_PHONE as string);
   const auth = getAuth();
   auth.useDeviceLanguage();
 
@@ -43,6 +43,10 @@ export function Login() {
     confirmationResult
       .confirm(verificationCode)
       .then((result) => {
+        tryCreateDreamUser().catch((error) => {
+          console.error("Error creating dream user: ", error);
+          auth.signOut();
+        });
         console.log("Logged in: ", result.user);
       })
       .catch((error) => {
