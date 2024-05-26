@@ -18,14 +18,13 @@
         "github.vscode-github-actions",
         "ms-azuretools.vscode-docker",
         "Ionic.ionic",
-        "jsayol.firebase-explorer"
+        "IronGeek.vscode-env"
       ]
     }
   },
 
-  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
+  // "runArgs": ["--env-file", ".env"],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [8100]
-
 }
