@@ -73,7 +73,7 @@ export function MyDreams() {
         </IonRefresher>
         {pages}
         {morePagesExist ? (
-          <IonInfiniteScroll threshold="100px" onIonInfinite={loadMoreDreams}>
+          <IonInfiniteScroll threshold="10%" onIonInfinite={loadMoreDreams}>
             <IonInfiniteScrollContent loadingText="Loading more dreams..."></IonInfiniteScrollContent>
           </IonInfiniteScroll>
         ) : (
