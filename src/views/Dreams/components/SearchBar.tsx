@@ -1,7 +1,7 @@
 import { IonSearchbar } from "@ionic/react";
 import { searchCircle } from "ionicons/icons";
 
-export function SearchBar({ setSearchFilter }: { setSearchFilter: (searchFilter: string) => void }) {
+function SearchBar({ setSearchFilter }: { setSearchFilter: (searchFilter: string) => void }) {
   return (
     <IonSearchbar
       id="dreamSearch"
@@ -18,3 +18,5 @@ export function SearchBar({ setSearchFilter }: { setSearchFilter: (searchFilter:
     />
   );
 }
+
+export default SearchBar;

@@ -17,51 +17,29 @@ import { Dream } from "../../types/Dream";
 import { IonPage } from "@ionic/react";
 
 import { add } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import useSWR, { mutate } from "swr";
-import { DREAMFLOW_API_URL, fetchUser, fetcher } from "../../data/DreamflowApi";
-import { DreamCard } from "./components/DreamCard";
-import { SearchBar } from "./components/SearchBar";
-
-interface DreamPageProps {
-  page: number;
-  pageSize: number;
-  setMorePagesExist: (morePagesExist: boolean) => void;
-}
-function DreamPage({ page, pageSize, setMorePagesExist }: DreamPageProps) {
-  const { data, error } = useSWR<Dream[]>(
-    `${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams?page=${page}&pageSize=${pageSize}`,
-    fetcher,
-  );
-
-  useEffect(() => {
-    if (data) setMorePagesExist(data.length > 0);
-  }, [data]);
-
-  if (error) return <div>Error loading dreams...</div>;
-  if (!data) return <div>Loading dreams...</div>;
-  return data.map((dream) => <DreamCard key={dream.id} {...dream} />);
-}
+import { mutate } from "swr";
+import { DREAMFLOW_API_URL, fetchUser } from "../../data/DreamflowApi";
+import DreamResultPage from "./components/DreamResultPage";
+import SearchBar from "./components/SearchBar";
 
 export function MyDreams() {
   const [page, setPage] = useState<number>(1);
   const [textFilter, setTextFilter] = useState<string>("");
   const [morePagesExist, setMorePagesExist] = useState<boolean>(true);
 
-  // const PAGE_SIZE = 10;
-
-  // function filterDreams(searchFilter: string, dreams: Dream[]) {
-  //   return dreams
-  //     .filter((dream) => {
-  //       var titleMatch = dream.title.toLowerCase().includes(searchFilter.toLowerCase());
-  //       var descriptionMatch = dream.description.toLowerCase().includes(searchFilter.toLowerCase());
-  //       return titleMatch || descriptionMatch;
-  //     })
-  //     .sort((a, b) => {
-  //       return new Date(a.date) < new Date(b.date) ? 1 : -1;
-  //     });
-  // }
+  function filterDreams(searchFilter: string, dreams: Dream[]) {
+    return dreams
+      .filter((dream) => {
+        var titleMatch = dream.title.toLowerCase().includes(searchFilter.toLowerCase());
+        var descriptionMatch = dream.description.toLowerCase().includes(searchFilter.toLowerCase());
+        return titleMatch || descriptionMatch;
+      })
+      .sort((a, b) => {
+        return new Date(a.date) < new Date(b.date) ? 1 : -1;
+      });
+  }
 
   async function refreshDreams(event: CustomEvent) {
     mutate(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`);
@@ -76,7 +54,7 @@ export function MyDreams() {
 
   const pages = [];
   for (let i = 1; i <= page; i++) {
-    pages.push(<DreamPage key={i} page={i} pageSize={10} setMorePagesExist={setMorePagesExist} />);
+    pages.push(<DreamResultPage key={i} page={i} pageSize={10} setMorePagesExist={setMorePagesExist} />);
   }
 
   return (
