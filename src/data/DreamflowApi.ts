@@ -79,7 +79,7 @@ async function updateDream(dreamUpdate: DreamUpdate): Promise<string | undefined
   }
 
   mutate(`${DREAMFLOW_API_URL}/dreams/${dreamUpdate.id}`);
-  mutate(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`);
+  mutate((key: string) => key.startsWith(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`));
 
   return dreamUpdate.id;
 }
@@ -98,7 +98,7 @@ async function deleteDream(id: string): Promise<void> {
   }
 
   mutate(`${DREAMFLOW_API_URL}/dreams/${id}`, undefined, false);
-  mutate(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`);
+  mutate((key: string) => key.startsWith(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`));
 }
 
 async function getAllDreams(): Promise<Dream[]> {
