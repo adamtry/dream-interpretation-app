@@ -8,22 +8,30 @@ interface DreamResultPageProps {
   page: number;
   pageSize: number;
   setMorePagesExist: (morePagesExist: boolean) => void;
+  searchQuery?: string;
 }
-function DreamResultPage({ page, pageSize, setMorePagesExist }: DreamResultPageProps) {
-  const { data, error } = useSWR<Dream[]>(
-    `${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams?page=${page}&pageSize=${pageSize}`,
-    fetcher,
-  );
+function DreamResultPage({ page, pageSize, searchQuery, setMorePagesExist }: DreamResultPageProps) {
+  function urlForPage(number: number): string {
+    var url = `${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams?page=${number}&pageSize=${pageSize}`;
+    if (searchQuery) {
+      url += `&search=${searchQuery}`;
+    }
+    return url;
+  }
+
+  const { data: response, error } = useSWR<{ data: Dream[]; headers: Headers }>(urlForPage(page), fetcher);
 
   useEffect(() => {
-    if (data) {
-      setMorePagesExist(data.length >= pageSize);
+    if (response) {
+      const totalPagesHeader = response.headers.get("X-Total-Pages");
+      const morePagesExist = totalPagesHeader ? page < parseInt(totalPagesHeader) : false;
+      setMorePagesExist(morePagesExist);
     }
-  }, [data]);
+  }, [response]);
 
   if (error) return <div>Error loading dreams...</div>;
-  if (!data) return <div>Loading dreams...</div>;
-  return data.map((dream) => <DreamCard key={dream.id} {...dream} />);
+  if (!response?.data) return <div></div>;
+  return response.data.map((dream) => <DreamCard key={dream.id} {...dream} />);
 }
 
 export default DreamResultPage;
