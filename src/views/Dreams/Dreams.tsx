@@ -1,4 +1,14 @@
-import { IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonTitle, IonToolbar } from "@ionic/react";
+import {
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonHeader,
+  IonIcon,
+  IonRefresher,
+  IonRefresherContent,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 import { Dream } from "../../types/Dream";
 
 import { IonPage } from "@ionic/react";
@@ -6,7 +16,7 @@ import { IonPage } from "@ionic/react";
 import { add } from "ionicons/icons";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { DREAMFLOW_API_URL, fetchUser, fetcher } from "../../data/DreamflowApi";
 import { DreamCard } from "./components/DreamCard";
 import { SearchBar } from "./components/SearchBar";
@@ -29,6 +39,11 @@ export function MyDreams() {
   const dreams = useSWR<Dream[]>(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`, fetcher).data || [];
   const shownDreams = useMemo(() => filterDreams(textFilter, dreams), [textFilter, dreams]);
 
+  async function refreshDreams(event: CustomEvent) {
+    mutate(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`);
+    event.detail.complete();
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -38,9 +53,9 @@ export function MyDreams() {
       </IonHeader>
       <SearchBar setSearchFilter={setTextFilter} />
       <IonContent>
-        {/* <IonRefresher slot="fixed" onIonRefresh={refreshDreams}>
+        <IonRefresher slot="fixed" onIonRefresh={refreshDreams}>
           <IonRefresherContent />
-        </IonRefresher> */}
+        </IonRefresher>
         {shownDreams.map((dream) => (
           <DreamCard {...dream} key={dream.id} />
         ))}
