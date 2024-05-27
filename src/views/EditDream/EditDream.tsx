@@ -2,29 +2,19 @@ import { Dream, DreamUpdate } from "../../types/Dream";
 
 import { useForm } from "react-hook-form";
 
-import { IonPage, IonSpinner, useIonViewWillEnter } from "@ionic/react";
-import { useState } from "react";
+import { IonPage, IonSpinner } from "@ionic/react";
 import { RouteComponentProps, useParams } from "react-router-dom";
-import { getDream, updateDream } from "../../data/DreamflowApi";
+import useSWR, { useSWRConfig } from "swr";
+import { DREAMFLOW_API_URL, fetcher, updateDream } from "../../data/DreamflowApi";
 import DreamForm from "../_components/DreamForm";
 
 interface EditDreamProps extends RouteComponentProps {}
 function EditDream({ history }: EditDreamProps) {
+  const { mutate } = useSWRConfig();
   const form = useForm();
   const { id } = useParams<{ id: string }>();
-  const [dream, setDream] = useState<Dream | undefined>(undefined);
 
-  useIonViewWillEnter(() => {
-    if (!document.location.pathname.includes("/edit/")) return;
-    getDream(id)
-      .then((dream) => {
-        setDream(dream);
-      })
-      .catch((error) => {
-        console.error(error);
-        history.push("/dreams");
-      });
-  });
+  const { data: dream } = useSWR<Dream>(`${DREAMFLOW_API_URL}/dreams/${id}`, fetcher);
 
   if (!dream) {
     return (
@@ -59,7 +49,6 @@ function EditDream({ history }: EditDreamProps) {
     await updateDream(dreamUpdate)
       .then((newDreamId) => {
         if (!newDreamId) return;
-
         resetForm();
       })
       .catch((error) => {

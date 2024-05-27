@@ -1,30 +1,17 @@
-import {
-  IonContent,
-  IonFab,
-  IonFabButton,
-  IonHeader,
-  IonIcon,
-  IonRefresher,
-  IonRefresherContent,
-  IonTitle,
-  IonToolbar,
-  RefresherEventDetail,
-  useIonViewWillEnter,
-} from "@ionic/react";
+import { IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonTitle, IonToolbar } from "@ionic/react";
 import { Dream } from "../../types/Dream";
 
 import { IonPage } from "@ionic/react";
 
-import { IonRefresherCustomEvent } from "@ionic/core";
 import { add } from "ionicons/icons";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllDreams } from "../../data/DreamflowApi";
+import useSWR from "swr";
+import { DREAMFLOW_API_URL, fetchUser, fetcher } from "../../data/DreamflowApi";
 import { DreamCard } from "./components/DreamCard";
 import { SearchBar } from "./components/SearchBar";
 
 export function MyDreams() {
-  const [dreams, setDreams] = useState<Dream[]>([]);
   const [textFilter, setTextFilter] = useState<string>("");
 
   function filterDreams(searchFilter: string, dreams: Dream[]) {
@@ -39,18 +26,8 @@ export function MyDreams() {
       });
   }
 
+  const dreams = useSWR<Dream[]>(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`, fetcher).data || [];
   const shownDreams = useMemo(() => filterDreams(textFilter, dreams), [textFilter, dreams]);
-
-  useIonViewWillEnter(() => {
-    refreshDreams();
-  });
-
-  async function refreshDreams(event?: IonRefresherCustomEvent<RefresherEventDetail>) {
-    getAllDreams().then((dr) => {
-      setDreams(dr);
-    });
-    event?.detail.complete();
-  }
 
   return (
     <IonPage>
@@ -61,9 +38,9 @@ export function MyDreams() {
       </IonHeader>
       <SearchBar setSearchFilter={setTextFilter} />
       <IonContent>
-        <IonRefresher slot="fixed" onIonRefresh={refreshDreams}>
+        {/* <IonRefresher slot="fixed" onIonRefresh={refreshDreams}>
           <IonRefresherContent />
-        </IonRefresher>
+        </IonRefresher> */}
         {shownDreams.map((dream) => (
           <DreamCard {...dream} key={dream.id} />
         ))}

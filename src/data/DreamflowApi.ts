@@ -1,10 +1,11 @@
 import { User, getAuth } from "firebase/auth";
+import { mutate } from "swr";
 import { Dream, DreamReq, DreamUpdate } from "../types/Dream";
 import { DreamUser } from "../types/DreamUser";
 
-const DREAMFLOW_API_URL = import.meta.env.VITE_DREAMFLOW_API_URL;
+export const DREAMFLOW_API_URL = import.meta.env.VITE_DREAMFLOW_API_URL;
 
-function fetchUser(): User {
+export function fetchUser(): User {
   const user = getAuth().currentUser;
   if (!user) throw new Error("User not logged in");
 
@@ -15,6 +16,24 @@ async function fetchAuthHeader(): Promise<string> {
   const user = getAuth().currentUser;
   if (!user) throw new Error("User not logged in");
   return `Bearer ${await user.getIdToken()}`;
+}
+
+/**
+ * Fetches data from the given URL - used by SWR for data fetching
+ * This can be cached and revalidated by SWR
+ */
+export async function fetcher(url: string) {
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: await fetchAuthHeader(),
+    },
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error("An error occurred while fetching the data.");
+    }
+    return response.json();
+  });
 }
 
 async function addDream(dreamReq: DreamReq) {
@@ -61,6 +80,9 @@ async function updateDream(dreamUpdate: DreamUpdate): Promise<string | undefined
   if (!response.ok) {
     throw new Error("Failed to update dream");
   }
+
+  mutate(`${DREAMFLOW_API_URL}/dreams/${dreamUpdate.id}`);
+  mutate(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`);
 
   return dreamUpdate.id;
 }

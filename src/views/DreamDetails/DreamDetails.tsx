@@ -8,21 +8,20 @@ import {
   IonSpinner,
   IonTitle,
   IonToolbar,
-  useIonViewWillEnter,
 } from "@ionic/react";
 import {} from "ionicons/icons";
 import { useParams } from "react-router";
 
 import { arrowBackOutline, createOutline } from "ionicons/icons";
-import { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { deleteDream, getDream } from "../../data/DreamflowApi";
+import { DREAMFLOW_API_URL, deleteDream, fetcher } from "../../data/DreamflowApi";
 import { Dream } from "../../types/Dream";
 import { ConfirmDeleteAlert } from "./components/ConfirmDeleteAlert";
 
+import useSWR from "swr";
+
 function DreamDetails({ history }: RouteComponentProps) {
   const { id } = useParams<{ id: string }>();
-  const [dream, setDream] = useState<Dream | undefined>(undefined);
 
   function handleDelete() {
     deleteDream(id).then(() => {
@@ -30,19 +29,7 @@ function DreamDetails({ history }: RouteComponentProps) {
     });
   }
 
-  useIonViewWillEnter(() => {
-    if (!document.location.pathname.includes("/view/")) return;
-    if (id) {
-      getDream(id)
-        .then((dream) => {
-          setDream(dream);
-        })
-        .catch((error) => {
-          console.error(error);
-          history.push("/dreams");
-        });
-    }
-  });
+  const { data: dream } = useSWR<Dream>(`${DREAMFLOW_API_URL}/dreams/${id}`, fetcher);
 
   if (!id || !dream) {
     return (
