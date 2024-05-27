@@ -35,7 +35,6 @@ export function MyDreams() {
   }
 
   async function loadMoreDreams(event: CustomEvent) {
-    console.log(`Loading page ${page + 1} with query ${searchQuery}`);
     setPage(page + 1);
     setTimeout(() => (event.target as HTMLIonInfiniteScrollElement).complete(), 500);
   }
