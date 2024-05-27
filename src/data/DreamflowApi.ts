@@ -8,14 +8,11 @@ export const DREAMFLOW_API_URL = import.meta.env.VITE_DREAMFLOW_API_URL;
 export function fetchUser(): User {
   const user = getAuth().currentUser;
   if (!user) throw new Error("User not logged in");
-
   return user;
 }
 
 async function fetchAuthHeader(): Promise<string> {
-  const user = getAuth().currentUser;
-  if (!user) throw new Error("User not logged in");
-  return `Bearer ${await user.getIdToken()}`;
+  return `Bearer ${await fetchUser().getIdToken()}`;
 }
 
 /**

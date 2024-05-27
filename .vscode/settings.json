@@ -13,7 +13,8 @@
   "editor.tabSize": 2,
   "files.associations": {
     "*.ts": "typescript",
-    "*.tsx": "typescriptreact"
+    "*.tsx": "typescriptreact",
+    "*.env*": "env"
   },
   "[typescript]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
@@ -22,5 +23,8 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
     "editor.formatOnSave": true
+  },
+  "[env]": {
+    "editor.defaultFormatter": "IronGeek.vscode-env"
   }
 }
