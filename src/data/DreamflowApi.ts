@@ -97,8 +97,8 @@ async function deleteDream(id: string): Promise<void> {
     throw new Error("Failed to delete dream");
   }
 
+  mutate(`${DREAMFLOW_API_URL}/dreams/${id}`, undefined, false);
   mutate(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`);
-  mutate(`${DREAMFLOW_API_URL}/dreams/${id}`, undefined, { revalidate: false });
 }
 
 async function getAllDreams(): Promise<Dream[]> {
