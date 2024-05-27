@@ -1,6 +1,6 @@
 import { User, getAuth } from "firebase/auth";
 import { Dream, DreamReq, DreamUpdate } from "../types/Dream";
-import { DreamUser } from "../types/User";
+import { DreamUser } from "../types/DreamUser";
 
 const DREAMFLOW_API_URL = import.meta.env.VITE_DREAMFLOW_API_URL;
 
