@@ -41,19 +41,6 @@ function DreamPage({ page, pageSize, setMorePagesExist }: DreamPageProps) {
 
   if (error) return <div>Error loading dreams...</div>;
   if (!data) return <div>Loading dreams...</div>;
-  if (data.length === 0) {
-    return (
-      <IonNote
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          margin: "20px",
-        }}
-      >
-        No more dreams
-      </IonNote>
-    );
-  }
   return data.map((dream) => <DreamCard key={dream.id} {...dream} />);
 }
 
@@ -109,7 +96,17 @@ export function MyDreams() {
           <IonInfiniteScroll threshold="100px" onIonInfinite={loadMoreDreams}>
             <IonInfiniteScrollContent loadingText="Loading more dreams..."></IonInfiniteScrollContent>
           </IonInfiniteScroll>
-        ) : null}
+        ) : (
+          <IonNote
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              margin: "20px",
+            }}
+          >
+            No more dreams
+          </IonNote>
+        )}
       </IonContent>
       <Link to="/dreams/add">
         <IonFab vertical="bottom" horizontal="end" aria-label="add dream">
