@@ -16,7 +16,9 @@ function DreamResultPage({ page, pageSize, setMorePagesExist }: DreamResultPageP
   );
 
   useEffect(() => {
-    if (data) setMorePagesExist(data.length > 0);
+    if (data) {
+      setMorePagesExist(data.length >= pageSize);
+    }
   }, [data]);
 
   if (error) return <div>Error loading dreams...</div>;
