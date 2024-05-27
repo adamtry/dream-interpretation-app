@@ -4,13 +4,12 @@ import { useForm } from "react-hook-form";
 
 import { IonPage, IonSpinner } from "@ionic/react";
 import { RouteComponentProps, useParams } from "react-router-dom";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 import { DREAMFLOW_API_URL, fetcher, updateDream } from "../../data/DreamflowApi";
 import DreamForm from "../_components/DreamForm";
 
 interface EditDreamProps extends RouteComponentProps {}
 function EditDream({ history }: EditDreamProps) {
-  const { mutate } = useSWRConfig();
   const form = useForm();
   const { id } = useParams<{ id: string }>();
 
