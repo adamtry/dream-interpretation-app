@@ -15,10 +15,10 @@ import { useParams } from "react-router";
 import { arrowBackOutline, createOutline } from "ionicons/icons";
 import { RouteComponentProps } from "react-router-dom";
 import { DREAMFLOW_API_URL, deleteDream, fetcher } from "../../data/DreamflowApi";
-import { Dream } from "../../types/Dream";
 import { ConfirmDeleteAlert } from "./components/ConfirmDeleteAlert";
 
 import useSWR from "swr";
+import { Dream } from "../../types/Dream";
 
 function DreamDetails({ history }: RouteComponentProps) {
   const { id } = useParams<{ id: string }>();
@@ -29,8 +29,8 @@ function DreamDetails({ history }: RouteComponentProps) {
     });
   }
 
-  const { data: dream } = useSWR<Dream>(`${DREAMFLOW_API_URL}/dreams/${id}`, fetcher);
-
+  const { data: res } = useSWR<{ data: Dream; headers: Headers }>(`${DREAMFLOW_API_URL}/dreams/${id}`, fetcher);
+  const dream = res?.data;
   if (!id || !dream) {
     return (
       <IonPage>

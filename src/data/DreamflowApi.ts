@@ -19,18 +19,22 @@ async function fetchAuthHeader(): Promise<string> {
  * Fetches data from the given URL - used by SWR for data fetching
  * This can be cached and revalidated by SWR
  */
-export async function fetcher(url: string) {
-  return fetch(url, {
+export async function fetcher(url: string): Promise<{ data: any; headers: Headers }> {
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       Authorization: await fetchAuthHeader(),
     },
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error("An error occurred while fetching the data.");
-    }
-    return response.json();
   });
+
+  if (!response.ok) {
+    throw new Error("An error occurred while fetching the data.");
+  }
+
+  const data = await response.json();
+  const headers = await response.headers;
+
+  return { data, headers };
 }
 
 async function addDream(dreamReq: DreamReq) {

@@ -2,7 +2,7 @@ import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from "@ionic/r
 import { Link } from "react-router-dom";
 import { Dream } from "../../../types/Dream";
 
-export function DreamCard(dream: Dream) {
+function DreamCard(dream: Dream) {
   var formattedDate = new Date(dream.date).toLocaleDateString();
   const linkUrl = `/dreams/view/${dream.id}`;
   return (
@@ -25,3 +25,5 @@ export function DreamCard(dream: Dream) {
     </Link>
   );
 }
+
+export default DreamCard;

@@ -13,7 +13,8 @@ function EditDream({ history }: EditDreamProps) {
   const form = useForm();
   const { id } = useParams<{ id: string }>();
 
-  const { data: dream } = useSWR<Dream>(`${DREAMFLOW_API_URL}/dreams/${id}`, fetcher);
+  const { data: response } = useSWR<{ data: Dream; headers: Headers }>(`${DREAMFLOW_API_URL}/dreams/${id}`, fetcher);
+  const dream = response?.data;
 
   if (!dream) {
     return (
