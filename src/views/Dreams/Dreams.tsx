@@ -30,7 +30,22 @@ export function MyDreams() {
   const [morePagesExist, setMorePagesExist] = useState<boolean>(true);
 
   async function refreshDreams(event: CustomEvent) {
-    mutate(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`);
+    setPage(1);
+    mutate((key: string) => {
+      return key.startsWith(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`) && key.includes("page=1");
+    });
+    mutate(
+      (key: string) => {
+        return (
+          key.startsWith(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`) &&
+          key.includes("page=") &&
+          !key.includes("page=1")
+        );
+      },
+      false,
+      false,
+    );
+    setSearchQuery("");
     event.detail.complete();
   }
 
