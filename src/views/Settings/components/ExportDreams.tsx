@@ -3,22 +3,31 @@ import { download } from "ionicons/icons";
 import { getAllDreams } from "../../../data/DreamflowApi";
 
 function ExportDreams() {
-  function exportDreamsToCSV() {
-    console.log("Exporting dreams to CSV...");
+  function cleanField(field: string) {
+    return field
+      .replace(/\n/g, " ")
+      .replace(/\t/g, " ")
+      .replace(/\r/g, " ")
+      .replace(/\r\n/g, " ")
+      .replace("\\", "\\\\");
+  }
+
+  function exportDreamsToTSV() {
+    console.log("Exporting dreams to TSV...");
     getAllDreams().then((dreams) => {
-      const csv =
-        "date,title,description\n" +
+      const tsv =
+        "date\ttitle\tdescription\n" +
         dreams
           .map((dream) => {
-            return `${dream.date},${dream.title},${dream.description}`;
+            return `${dream.date}\t${cleanField(dream.title)}\t${cleanField(dream.description)}`;
           })
           .join("\n");
 
-      const blob = new Blob([csv], { type: "text/csv" });
+      const blob = new Blob([tsv], { type: "text/tsv" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "dreams.csv";
+      a.download = "dreams.tsv";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -26,9 +35,9 @@ function ExportDreams() {
   }
 
   return (
-    <IonItem button={true} onClick={exportDreamsToCSV}>
+    <IonItem button={true} onClick={exportDreamsToTSV}>
       <IonIcon icon={download} slot="start"></IonIcon>
-      <IonLabel>Export Dreams to CSV</IonLabel>
+      <IonLabel>Export Dreams to TSV</IonLabel>
     </IonItem>
   );
 }

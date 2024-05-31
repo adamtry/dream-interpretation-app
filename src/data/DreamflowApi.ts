@@ -1,5 +1,5 @@
 import { User, getAuth } from "firebase/auth";
-import { mutate } from "swr";
+import useSWR, { SWRResponse, mutate } from "swr";
 import { Dream, DreamReq, DreamUpdate } from "../types/Dream";
 import { DreamUser } from "../types/DreamUser";
 
@@ -35,6 +35,29 @@ export async function fetcher(url: string): Promise<{ data: any; headers: Header
   const headers = await response.headers;
 
   return { data, headers };
+}
+
+export function useDreams(queryParams?: Record<string, string>): SWRResponse<{ data: Dream[]; headers: Headers }> {
+  const queryString = new URLSearchParams(queryParams).toString();
+  return useSWR<{ data: Dream[]; headers: Headers }>(`${DREAMFLOW_API_URL}/dreams/?${queryString}`, fetcher, {
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      if (retryCount >= 2 || error.status === 404 || error.status >= 500) {
+        mutate((key: string) => key.split("?")[0].endsWith("/dreams/"));
+      }
+      return new Promise((resolve) => setTimeout(resolve, 5000));
+    },
+  });
+}
+
+export function useDream(id: string): SWRResponse<{ data: Dream; headers: Headers }> {
+  return useSWR<{ data: Dream; headers: Headers }>(`${DREAMFLOW_API_URL}/dreams/${id}`, fetcher, {
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      if (retryCount >= 2 || error.status === 404 || error.status >= 500) {
+        mutate((key: string) => key.includes(`/dreams/${id}`));
+      }
+      return new Promise((resolve) => setTimeout(resolve, 5000));
+    },
+  });
 }
 
 async function addDream(dreamReq: DreamReq) {
@@ -82,8 +105,7 @@ async function updateDream(dreamUpdate: DreamUpdate): Promise<string | undefined
     throw new Error("Failed to update dream");
   }
 
-  mutate(`${DREAMFLOW_API_URL}/dreams/${dreamUpdate.id}`);
-  mutate((key: string) => key.startsWith(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`));
+  mutate((key: string) => key.includes("/dreams/"));
 
   return dreamUpdate.id;
 }
@@ -101,26 +123,8 @@ async function deleteDream(id: string): Promise<void> {
     throw new Error("Failed to delete dream");
   }
 
-  mutate(`${DREAMFLOW_API_URL}/dreams/${id}`, undefined, false);
-  mutate((key: string) => key.startsWith(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`));
-}
-
-async function getAllDreams(): Promise<Dream[]> {
-  console.log(`Fetching all dreams`);
-
-  const response = await fetch(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`, {
-    method: "GET",
-    headers: {
-      Authorization: await fetchAuthHeader(),
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to get all dreams");
-  }
-
-  const dreamData = (await response.json()) as Dream[];
-  return dreamData;
+  mutate((key: string) => key.includes(`/dreams/${id}`), undefined, false);
+  mutate((key: string) => key.startsWith(`${DREAMFLOW_API_URL}/dreams`));
 }
 
 async function getDreamUser(): Promise<DreamUser> {
@@ -160,6 +164,42 @@ async function tryCreateDreamUser() {
   if (!response.ok) {
     throw new Error("Failed to create user");
   }
+}
+
+async function getAllDreams(): Promise<Dream[]> {
+  console.log(`Fetching all dreams`);
+
+  const params = new URLSearchParams({
+    page: "1",
+    page_size: "100",
+  });
+
+  var allDreams: Dream[] = [];
+  while (true) {
+    const response = await fetch(`${DREAMFLOW_API_URL}/dreams/?${params.toString()}`, {
+      method: "GET",
+      headers: {
+        Authorization: await fetchAuthHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to get dreams");
+    }
+
+    const dreamData = (await response.json()) as Dream[];
+
+    allDreams.push(...dreamData);
+
+    const totalPagesHeader = response.headers.get("X-Total-Pages");
+    var page = parseInt(params.get("page") || "1");
+    const morePagesExist = totalPagesHeader ? page < parseInt(totalPagesHeader) : false;
+    if (!morePagesExist) break;
+    const nextPage = response.headers.get("X-Next-Page") || (parseInt(params.get("page") || "1") + 1).toString();
+    params.set("page", nextPage);
+  }
+
+  return allDreams;
 }
 
 export { addDream, deleteDream, getAllDreams, getDream, tryCreateDreamUser, updateDream };
