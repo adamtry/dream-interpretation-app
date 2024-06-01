@@ -1,15 +1,4 @@
-import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonInput,
-  IonItem,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  useIonViewDidEnter,
-  useIonViewWillLeave,
-} from "@ionic/react";
+import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 import { ConfirmationResult, RecaptchaVerifier, getAuth, signInWithPhoneNumber } from "firebase/auth";
 import type { E164Number } from "libphonenumber-js";
 import { useEffect, useState } from "react";
@@ -62,6 +51,9 @@ export function Login() {
     data = data as FormData;
     var phoneNumber = data.phoneNumber.toString();
 
+    window.recaptchaVerifier.clear();
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {});
+
     signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
       .then((confirmationResult) => {
         console.log("Confirmation result: ", confirmationResult);
@@ -73,27 +65,11 @@ export function Login() {
       });
   }
 
-  useIonViewDidEnter(() => {
-    console.log("View did enter");
-    if (!window.recaptchaVerifier) {
-      console.log("Creating recaptchaVerifier");
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {});
-    }
-  });
-
-  useIonViewWillLeave(() => {
-    console.log("View will leave");
-    if (window.recaptchaVerifier) {
-      console.log("Clearing recaptchaVerifier");
-      window.recaptchaVerifier.clear();
-    }
-  });
-
   useEffect(() => {
     if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {});
     }
-  }, [window.recaptchaVerifier]);
+  }, [window]);
 
   return (
     <IonPage>
