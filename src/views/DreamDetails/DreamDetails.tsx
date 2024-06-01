@@ -17,14 +17,8 @@ import { RouteComponentProps } from "react-router-dom";
 import { deleteDream, useDream } from "../../data/DreamflowApi";
 import { ConfirmDeleteAlert } from "./components/ConfirmDeleteAlert";
 
-import { useSWRConfig } from "swr";
-
 function DreamDetails({ history }: RouteComponentProps) {
   const { id } = useParams<{ id: string }>();
-
-  const { cache } = useSWRConfig();
-
-  console.log(cache);
 
   function handleDelete() {
     deleteDream(id).then(() => {
