@@ -1,6 +1,7 @@
-import { IonButton, IonInput, IonItem } from "@ionic/react";
+import { IonButton, IonIcon, IonInput, IonItem, IonLabel } from "@ionic/react";
 
 import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from "firebase/auth";
+import { alertCircleOutline } from "ionicons/icons";
 import type { E164Number } from "libphonenumber-js";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -61,41 +62,41 @@ function DeleteAccount() {
   }, [window]);
 
   return (
-    <div style={{ display: "ruby-text" }}>
+    <>
       {flowState == "deleteBtn" && (
-        <IonItem>
-          <IonButton color="danger" onClick={() => setFlowState("setNumber")}>
-            Delete Account
-          </IonButton>
+        <IonItem button={true} onClick={() => setFlowState("setNumber")}>
+          <IonIcon icon={alertCircleOutline} slot="start"></IonIcon>
+          <IonLabel>Delete Account</IonLabel>
         </IonItem>
       )}
       {flowState == "setNumber" && (
         <>
-          <h1>Delete Account</h1>
-          <br />
-          <p style={{ textAlign: "center" }}>Confirm phone number</p>
-          <IonItem>
-            <form onSubmit={handleSubmit(onSubmitPhoneNumber)}>
-              <PhoneInput
-                placeholder="Enter phone number"
-                value={value as E164Number}
-                /* @ts-ignore */
-                onChange={setValue}
-                {...register("phoneNumber", { required: true })}
-              />
-              <div style={{ margin: "2em" }}>
-                <div id="recaptcha-container"></div>
-              </div>
-              <IonButton id="sign-in-button" className="ion-margin-top" type="submit" expand="block">
-                Confirm & Continue
-              </IonButton>
-              <input type="submit" style={{ display: "none" }} />
-            </form>
-          </IonItem>
+          <div>
+            <div id="recaptcha-container"></div>
+          </div>
+          <div style={{ display: "ruby-text" }}>
+            <h1>Confirm Account Deletion</h1>
+            <br />
+            <IonItem>
+              <form onSubmit={handleSubmit(onSubmitPhoneNumber)}>
+                <PhoneInput
+                  placeholder="Enter phone number"
+                  value={value as E164Number}
+                  /* @ts-ignore */
+                  onChange={setValue}
+                  {...register("phoneNumber", { required: true })}
+                />
+                <IonButton id="sign-in-button" className="ion-margin-top" type="submit" expand="block">
+                  Continue
+                </IonButton>
+                <input type="submit" style={{ display: "none" }} />
+              </form>
+            </IonItem>
+          </div>
         </>
       )}
       {flowState == "confirmCode" && (
-        <>
+        <div style={{ display: "ruby-text" }}>
           <h1>Delete Account</h1>
           <br />
           <form onSubmit={handleSubmit(onSubmitVerificationCode)}>
@@ -110,9 +111,9 @@ function DeleteAccount() {
               Confirm & Delete
             </IonButton>
           </form>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 }
 
