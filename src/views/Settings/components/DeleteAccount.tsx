@@ -80,8 +80,8 @@ function DeleteAccount() {
                 placeholder="Enter phone number"
                 value={value as E164Number}
                 /* @ts-ignore */
-                // onChange={setValue}
-                // {...register("phoneNumber", { required: true })}
+                onChange={setValue}
+                {...register("phoneNumber", { required: true })}
               />
               <div style={{ margin: "2em" }}>
                 <div id="recaptcha-container"></div>
