@@ -7,9 +7,9 @@ import { Redirect, Route } from "react-router-dom";
 import { SWRConfig } from "swr";
 import AddDream from "./views/AddDream/AddDream";
 import DreamDetails from "./views/DreamDetails/DreamDetails";
-import { MyDreams } from "./views/Dreams/Dreams";
+import MyDreams from "./views/Dreams/Dreams";
 import EditDream from "./views/EditDream/EditDream";
-import { Login } from "./views/Login/Login";
+import Login from "./views/Login/Login";
 import Settings from "./views/Settings/Settings";
 
 function App() {

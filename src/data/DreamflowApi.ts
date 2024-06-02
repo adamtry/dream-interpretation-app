@@ -60,20 +60,23 @@ export function useDream(id: string): SWRResponse<{ data: Dream; headers: Header
   });
 }
 
-async function addDream(dreamReq: DreamReq) {
-  console.log(`Adding dream: ${dreamReq.title} ${dreamReq.description} ${dreamReq.date} to Firestore`);
-  await fetch(`${DREAMFLOW_API_URL}/users/${fetchUser().uid}/dreams`, {
+async function addDream(dreamReq: DreamReq): Promise<Dream> {
+  console.log(`Adding dream: ${dreamReq.title} ${dreamReq.description} ${dreamReq.date}`);
+  const response = await fetch(`${DREAMFLOW_API_URL}/dreams/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: await fetchAuthHeader(),
     },
     body: JSON.stringify(dreamReq),
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error("Failed to add dream");
-    }
   });
+
+  if (!response.ok) {
+    throw new Error("Failed to add dream");
+  }
+
+  mutate((key: string) => key.includes("/dreams/"));
+  return response.json() as Promise<Dream>;
 }
 
 async function getDream(id: string): Promise<Dream | undefined> {
@@ -125,6 +128,21 @@ async function deleteDream(id: string): Promise<void> {
 
   mutate((key: string) => key.includes(`/dreams/${id}`), undefined, false);
   mutate((key: string) => key.startsWith(`${DREAMFLOW_API_URL}/dreams`));
+}
+
+async function deleteUserAndAllDreams() {
+  console.log("Deleting user and all dreams");
+  const user = fetchUser();
+  const response = await fetch(`${DREAMFLOW_API_URL}/users/${user.uid}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: await fetchAuthHeader(),
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete user");
+  }
 }
 
 async function getDreamUser(): Promise<DreamUser> {
@@ -202,4 +220,4 @@ async function getAllDreams(): Promise<Dream[]> {
   return allDreams;
 }
 
-export { addDream, deleteDream, getAllDreams, getDream, tryCreateDreamUser, updateDream };
+export { addDream, deleteDream, deleteUserAndAllDreams, getAllDreams, getDream, tryCreateDreamUser, updateDream };

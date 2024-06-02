@@ -1,40 +1,8 @@
-import {
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
+import { IonContent, IonHeader, IonList, IonListHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 
+import DeleteAccount from "./components/DeleteAccount";
 import ExportDreams from "./components/ExportDreams";
-
-import { getAuth, signOut } from "firebase/auth";
-import { logOutOutline } from "ionicons/icons";
-
-function SignOut() {
-  function handleSignOut() {
-    const auth = getAuth();
-    signOut(auth)
-      .then(() => {
-        console.log("User signed out");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  return (
-    <IonItem button={true} onClick={handleSignOut}>
-      <IonIcon icon={logOutOutline} slot="start"></IonIcon>
-      <IonLabel>Sign Out</IonLabel>
-    </IonItem>
-  );
-}
+import SignOut from "./components/SignOut";
 
 function Settings() {
   return (
@@ -52,6 +20,10 @@ function Settings() {
         <IonListHeader>Account</IonListHeader>
         <IonList inset={true}>
           <SignOut />
+        </IonList>
+        <IonListHeader>Danger zone</IonListHeader>
+        <IonList inset={true}>
+          <DeleteAccount />
         </IonList>
       </IonContent>
     </IonPage>

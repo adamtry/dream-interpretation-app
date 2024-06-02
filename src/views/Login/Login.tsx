@@ -1,6 +1,6 @@
 import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 import { ConfirmationResult, RecaptchaVerifier, getAuth, signInWithPhoneNumber } from "firebase/auth";
-import type { E164Number } from "libphonenumber-js";
+import { E164Number } from "libphonenumber-js";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
@@ -14,7 +14,7 @@ declare global {
   }
 }
 
-export function Login() {
+function LoginContent() {
   const [flowState, setFlowState] = useState<"setNumber" | "confirmCode">("setNumber");
   const [value, setValue] = useState(import.meta.env.VITE_TEST_PHONE as string);
   const auth = getAuth();
@@ -72,6 +72,46 @@ export function Login() {
   }, [window]);
 
   return (
+    <IonContent className="ion-padding" style={{ top: "20%" }}>
+      <h1>Enter your phone number</h1>
+      <p>Include your area code (e.g. +1 for USA)</p>
+      {flowState == "setNumber" && (
+        <form onSubmit={handleSubmit(onSubmitPhoneNumber)}>
+          <PhoneInput
+            value={value as E164Number}
+            onChange={setValue}
+            placeholder="Enter phone number"
+            {...register("phoneNumber", { required: true })}
+          />
+          <div style={{ margin: "2em" }}>
+            <div id="recaptcha-container"></div>
+          </div>
+          <IonButton id="sign-in-button" className="ion-margin-top" type="submit" expand="block">
+            Log in
+          </IonButton>
+          <input type="submit" style={{ display: "none" }} />
+        </form>
+      )}
+      {flowState == "confirmCode" && (
+        <form onSubmit={handleSubmit(onSubmitVerificationCode)}>
+          <IonItem>
+            <IonInput
+              label="Verification Code"
+              labelPlacement="floating"
+              {...register("verificationCode", { required: true })}
+            />
+          </IonItem>
+          <IonButton id="confirm-code-button" className="ion-margin-top" expand="block" type="submit">
+            Confirm code
+          </IonButton>
+        </form>
+      )}
+    </IonContent>
+  );
+}
+
+function Login() {
+  return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
@@ -79,39 +119,10 @@ export function Login() {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        {flowState == "setNumber" && (
-          <form onSubmit={handleSubmit(onSubmitPhoneNumber)}>
-            <PhoneInput
-              placeholder="Enter phone number"
-              value={value as E164Number}
-              /* @ts-ignore */
-              onChange={setValue}
-              {...register("phoneNumber", { required: true })}
-            />
-            <div style={{ margin: "2em" }}>
-              <div id="recaptcha-container"></div>
-            </div>
-            <IonButton id="sign-in-button" className="ion-margin-top" type="submit" expand="block">
-              Log in
-            </IonButton>
-            <input type="submit" style={{ display: "none" }} />
-          </form>
-        )}
-        {flowState == "confirmCode" && (
-          <form onSubmit={handleSubmit(onSubmitVerificationCode)}>
-            <IonItem>
-              <IonInput
-                label="Verification Code"
-                labelPlacement="floating"
-                {...register("verificationCode", { required: true })}
-              />
-            </IonItem>
-            <IonButton id="confirm-code-button" className="ion-margin-top" expand="block" type="submit">
-              Confirm code
-            </IonButton>
-          </form>
-        )}
+        <LoginContent />
       </IonContent>
     </IonPage>
   );
 }
+
+export default Login;

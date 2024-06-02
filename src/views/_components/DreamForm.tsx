@@ -8,6 +8,7 @@ import {
   IonInput,
   IonItem,
   IonPage,
+  IonSpinner,
   IonTextarea,
   IonTitle,
   IonToolbar,
@@ -17,6 +18,7 @@ import { DreamReq, DreamUpdate } from "../../types/Dream";
 import { UseFormReturn } from "react-hook-form";
 
 import { closeOutline } from "ionicons/icons";
+import { useState } from "react";
 
 interface DreamFormProps {
   form: UseFormReturn<any>;
@@ -26,6 +28,7 @@ interface DreamFormProps {
 }
 function DreamForm({ form, formTitle, presetValues, submitAction }: DreamFormProps) {
   const { register, handleSubmit, reset } = form;
+  const [loading, setLoading] = useState(false);
 
   function resetForm() {
     reset(
@@ -46,7 +49,10 @@ function DreamForm({ form, formTitle, presetValues, submitAction }: DreamFormPro
       date: data.date,
     };
     resetForm();
-    submitAction(dream);
+    setLoading(true);
+    await submitAction(dream).finally(() => {
+      setLoading(false);
+    });
   }
 
   return (
@@ -96,10 +102,15 @@ function DreamForm({ form, formTitle, presetValues, submitAction }: DreamFormPro
               required
             />
           </IonItem>
-
-          <IonButton type="submit" expand="block">
-            Submit
-          </IonButton>
+          {loading ? (
+            <div style={{ textAlign: "center", margin: "1em" }}>
+              <IonSpinner />
+            </div>
+          ) : (
+            <IonButton type="submit" expand="block">
+              Submit
+            </IonButton>
+          )}
         </form>
       </IonContent>
     </IonPage>

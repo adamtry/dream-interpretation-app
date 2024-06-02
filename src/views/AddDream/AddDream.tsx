@@ -25,14 +25,13 @@ function AddDream({ history }: AddDreamProps) {
     const dreamData = data as DreamReq;
     dreamData.title = dreamData.title || "Untitled";
     await addDream(dreamData)
-      .then(() => {
+      .then((newDream) => {
         resetForm();
+        history.push(`/dreams/view/${newDream.id}`);
       })
       .catch((error) => {
         console.error("Error adding dream: ", error);
-      })
-      .finally(() => {
-        history.goBack();
+        history.push("/dreams");
       });
   }
 

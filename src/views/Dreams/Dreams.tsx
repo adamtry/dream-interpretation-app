@@ -23,7 +23,7 @@ import { DREAMFLOW_API_URL, fetchUser } from "../../data/DreamflowApi";
 import DreamResultPage from "./components/DreamResultPage";
 import SearchBar from "./components/SearchBar";
 
-export function MyDreams() {
+function MyDreams() {
   const [page, setPage] = useState<number>(1);
   const [pages, setPages] = useState<React.ReactNode[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -113,3 +113,5 @@ export function MyDreams() {
     </IonPage>
   );
 }
+
+export default MyDreams;
